@@ -1,5 +1,15 @@
 # Trove - E-Commerce Application
 
+![Next.js](https://img.shields.io/badge/Next.js-16.0.5-black?style=flat&logo=next.js&logoColor=white)
+![React](https://img.shields.io/badge/React-19.2.0-blue?style=flat&logo=react&logoColor=white)
+![NestJS](https://img.shields.io/badge/NestJS-11.1.9-E0234E?style=flat&logo=nestjs&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-7.0.1-2D3748?style=flat&logo=prisma&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?style=flat&logo=postgresql&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat&logo=typescript&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=flat&logo=docker&logoColor=white)
+![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-FE5196?style=flat&logo=conventionalcommits&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat)
+
 A modern, full-stack e-commerce application built with Next.js, Nest.js, PostgreSQL, and Prisma.
 
 ## Features
@@ -76,7 +86,7 @@ trove/
 1. **Clone the repository**
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Mohammed-Elmorsy/Trove.git
 cd trove
 ```
 
