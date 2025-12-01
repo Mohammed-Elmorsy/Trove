@@ -1,6 +1,7 @@
 # Claude
 .claude/mcp.json
 .claude/settings.local.json
+.claude/commands
 
 # Dependencies
 node_modules/
