@@ -128,7 +128,23 @@ Frontend will run on: `http://localhost:3000`
 
 ## Development
 
-### Running the Application
+### Quick Start (From Root Directory)
+
+```bash
+# Start database
+docker-compose up -d
+
+# Start backend only
+npm run dev:backend
+
+# Start frontend only
+npm run dev:frontend
+
+# Start both backend and frontend together
+npm run dev
+```
+
+### Running Services Individually
 
 ```bash
 # Terminal 1 - Database

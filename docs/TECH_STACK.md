@@ -20,6 +20,7 @@
   - Type-safe database client
   - Auto-generated types
   - Migration management
+  - PostgreSQL adapter (@prisma/adapter-pg)
   - Excellent developer experience
 
 ### Validation

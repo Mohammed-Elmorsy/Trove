@@ -37,6 +37,9 @@ npm install
 # Copy environment variables
 cp .env.example .env
 
+# Generate Prisma Client
+npx prisma generate
+
 # Run database migrations
 npx prisma migrate dev
 
@@ -112,7 +115,31 @@ npx prisma migrate reset
 
 ## Development Workflow
 
-### 1. Start Services
+### Quick Start (From Root Directory)
+
+You can now run the project from the root directory using these convenient scripts:
+
+```bash
+# Start database
+docker-compose up -d
+
+# Start backend only
+npm run dev:backend
+
+# Start frontend only
+npm run dev:frontend
+
+# Start both backend and frontend
+npm run dev
+
+# Run tests
+npm run test:backend
+npm run test:frontend
+```
+
+### Manual Start (Alternative)
+
+If you prefer to start services individually:
 
 ```bash
 # Terminal 1 - Database
@@ -137,7 +164,28 @@ cd frontend && npm run dev
 
 ## Useful Commands
 
-### Backend
+### Root Directory (Recommended)
+
+```bash
+# Development
+npm run dev:backend        # Start backend only
+npm run dev:frontend       # Start frontend only
+npm run dev                # Start both backend and frontend
+
+# Build
+npm run build:backend      # Build backend
+npm run build:frontend     # Build frontend
+
+# Testing
+npm run test:backend       # Run backend tests
+npm run test:frontend      # Run frontend lint
+
+# Formatting
+npm run format             # Format all files with Prettier
+npm run format:check       # Check formatting without making changes
+```
+
+### Backend (From backend/ directory)
 
 ```bash
 # Development
@@ -149,6 +197,11 @@ npm run build
 # Production
 npm run start:prod
 
+# Testing
+npm run test
+npm run test:watch
+npm run test:cov
+
 # Prisma commands
 npx prisma generate      # Generate Prisma Client
 npx prisma studio        # Open database GUI
@@ -156,7 +209,7 @@ npx prisma migrate dev   # Run migrations
 npx prisma db seed       # Seed database
 ```
 
-### Frontend
+### Frontend (From frontend/ directory)
 
 ```bash
 # Development
