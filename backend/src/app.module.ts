@@ -1,11 +1,28 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma/prisma.module';
 import { ProductsModule } from './products/products.module';
+import databaseConfig from './config/database.config';
+import appConfig from './config/app.config';
+import { validationSchema } from './config/validation.schema';
 
 @Module({
-  imports: [PrismaModule, ProductsModule],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: ['.env.local', `.env.${process.env.NODE_ENV}`, '.env'],
+      load: [databaseConfig, appConfig],
+      validationSchema,
+      validationOptions: {
+        abortEarly: true, // Stop validation on first error
+        allowUnknown: true, // Allow unknown keys (for future expansion)
+      },
+    }),
+    PrismaModule,
+    ProductsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

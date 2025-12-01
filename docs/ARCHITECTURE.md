@@ -106,11 +106,57 @@ backend/
 │       ├── prisma.service.ts
 │       └── prisma.module.ts
 │
+├── prisma.config.ts            # Prisma 7 config (CLI)
 └── prisma/
     ├── schema.prisma           # Database schema
     ├── migrations/             # Database migrations
     └── seed.ts                 # Seed data
 ```
+
+## Configuration Management
+
+The application uses an advanced configuration system with NestJS's `ConfigModule`. See [CONFIGURATION.md](./CONFIGURATION.md) for complete details.
+
+### Key Features
+
+- **Type-Safe Namespaces** - Organized configs by domain (app, database)
+- **Joi Validation** - Environment variables validated at startup
+- **Environment-Specific** - Separate configs for dev/prod/test
+- **Dependency Injection** - Configs available via DI throughout the app
+
+### Quick Example
+
+```typescript
+// Typed configuration access
+constructor(private configService: ConfigService) {
+  const appConfig = configService.get<AppConfig>('app');
+  console.log(appConfig.port); // Type-safe!
+}
+```
+
+### Configuration Files
+
+```
+backend/
+├── .env.development        # Development environment
+├── .env.production         # Production environment
+├── .env.test              # Test environment
+├── .env.example           # Template (committed)
+└── src/config/
+    ├── app.config.ts      # App configuration namespace
+    ├── database.config.ts # Database configuration namespace
+    └── validation.schema.ts # Joi validation schema
+```
+
+### Environment Priority
+
+1. `.env.local` - Local overrides (not committed)
+2. `.env.${NODE_ENV}` - Environment-specific
+3. `.env` - Default fallback
+
+### Prisma 7 Configuration
+
+Prisma 7 uses a separate `prisma.config.ts` file for CLI operations (migrations, schema location). The runtime database connection uses NestJS's ConfigModule for consistency and validation.
 
 ### Frontend (Next.js)
 

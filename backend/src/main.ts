@@ -1,17 +1,23 @@
 import { NestFactory } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
+import { AppConfig } from './config/app.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
+  const appConfig = configService.get<AppConfig>('app')!;
 
   // Enable CORS for frontend
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: appConfig.frontendUrl,
     credentials: true,
   });
 
-  const port = process.env.PORT || 4000;
-  await app.listen(port);
-  console.log(`🚀 Backend server running on http://localhost:${port}`);
+  await app.listen(appConfig.port);
+  console.log(
+    `🚀 Backend server running on http://localhost:${appConfig.port}`,
+  );
+  console.log(`📦 Environment: ${appConfig.nodeEnv}`);
 }
 bootstrap();

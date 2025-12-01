@@ -23,9 +23,17 @@
   - PostgreSQL adapter (@prisma/adapter-pg)
   - Excellent developer experience
 
-### Validation
+### Configuration & Validation
 
-- **Zod** - TypeScript-first schema validation
+- **@nestjs/config** - Configuration management module
+  - Type-safe configuration namespaces
+  - Environment-specific configurations
+  - Dependency injection support
+- **Joi** - Schema validation for environment variables
+  - Validates configuration at application startup
+  - Prevents runtime configuration errors
+  - Rich validation API
+- **Zod** - TypeScript-first schema validation (Coming in Milestone 3+)
   - Shared validation logic between frontend/backend
   - Type inference
 
