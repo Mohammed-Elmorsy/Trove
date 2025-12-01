@@ -9,6 +9,20 @@ datasource db {
   provider = "postgresql"
 }
 
+// Category Model (Milestone 2)
+model Category {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  products    Product[]
+
+  @@map("categories")
+}
+
 // Product Model (Milestone 2)
 model Product {
   id          String   @id @default(uuid())
@@ -16,11 +30,15 @@ model Product {
   description String?
   price       Decimal  @db.Decimal(10, 2)
   imageUrl    String?
-  category    String?
   stock       Int      @default(0)
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  @@index([name])
+  @@index([categoryId])
+  @@index([price])
   @@map("products")
 }
 
