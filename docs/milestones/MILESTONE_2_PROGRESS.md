@@ -154,10 +154,22 @@
 
 ## 📝 Documentation Updates Needed
 
-- [ ] Update MILESTONES.md to mark completed tasks
+- [x] Update MILESTONES.md to mark completed tasks
 - [ ] Add API documentation for product endpoints
-- [ ] Update TECH_STACK.md with new dependencies
+- [x] Update TECH_STACK.md with new dependencies
 - [ ] Add screenshots of product catalog to README
+
+## 🎨 Post-Milestone UI/UX Improvements (December 2, 2025)
+
+After initial completion, additional UI/UX improvements were made:
+
+- [x] **Shared Navbar** - Added responsive navigation with mobile menu (Shadcn NavigationMenu, Sheet)
+- [x] **Functional Home Pagination** - Replaced static text with working pagination component
+- [x] **ProductImage Component** - Reusable image component with smooth hover transitions
+- [x] **Full Shadcn UI Adoption** - Converted all filter components to use Shadcn UI
+- [x] **Loading Skeletons** - Updated to use Shadcn Skeleton component
+
+See [UIUX_IMPROVEMENTS.md](../reviews/UIUX_IMPROVEMENTS.md) for full details.
 
 ## 🎉 What Was Built
 

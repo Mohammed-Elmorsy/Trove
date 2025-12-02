@@ -64,6 +64,8 @@
     - Button, Card, Badge, Input, Label
     - NavigationMenu, Sheet, Separator
     - Skeleton (for loading states)
+  - Custom components:
+    - ProductImage (wrapper for Next.js Image with transitions)
 - **Lucide React** - Icon library
   - Consistent icon set
   - Tree-shakeable
