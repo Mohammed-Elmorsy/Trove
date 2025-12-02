@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -7,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, ShoppingCart } from 'lucide-react';
+import { ProductImage } from '@/components/ui/product-image';
 
 export async function generateMetadata({
   params,
@@ -111,21 +111,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Product Image */}
-            <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-white shadow-lg">
+            <div className="relative aspect-square w-full overflow-hidden rounded-lg bg-muted shadow-lg">
               {product.imageUrl ? (
-                <Image
-                  src={product.imageUrl}
-                  alt={product.name}
-                  fill
-                  className="object-cover"
-                  priority
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
+                <ProductImage src={product.imageUrl} alt={product.name} priority />
               ) : (
-                <div className="flex h-full items-center justify-center text-gray-400">
-                  <div className="text-center">
-                    <p className="text-2xl font-semibold">No Image Available</p>
-                  </div>
+                <div className="flex h-full items-center justify-center text-muted-foreground">
+                  <p className="text-2xl font-semibold">No Image Available</p>
                 </div>
               )}
 

@@ -63,14 +63,16 @@ export function SearchBar({ initialSearch = '', categoryId, minPrice, maxPrice }
           aria-label="Search products"
         />
         {searchTerm && (
-          <button
+          <Button
             type="button"
+            variant="ghost"
+            size="icon"
             onClick={handleClear}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            className="absolute right-0 top-0 h-full w-8 px-2 text-muted-foreground hover:text-foreground"
             aria-label="Clear search"
           >
             <X className="h-4 w-4" />
-          </button>
+          </Button>
         )}
       </div>
       <Button type="submit" size="icon" disabled={isPending} aria-label="Submit search">

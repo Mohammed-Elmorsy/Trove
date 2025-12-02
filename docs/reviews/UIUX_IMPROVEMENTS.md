@@ -1,0 +1,239 @@
+# UI/UX Improvements
+
+## Overview
+
+This document tracks the UI/UX improvements made to the Trove e-commerce application based on manual testing feedback.
+
+**Date**: December 2, 2025
+**Status**: Completed
+
+---
+
+## Issues Identified
+
+1. **No shared Navbar** - Navigation between pages was not intuitive
+2. **Home page pagination was non-functional** - Only showed "Page X of Y" text
+3. **Slow product image loading** - Images on product details page took too long to load
+4. **Inconsistent UI components** - Some components weren't using Shadcn UI
+
+---
+
+## Fixes Implemented
+
+### 1. Shared Navbar Component
+
+**Files Created:**
+
+- `frontend/components/layout/navbar.tsx`
+
+**Features:**
+
+- Sticky header with backdrop blur effect
+- Logo with store icon
+- Desktop navigation using Shadcn NavigationMenu component
+- Mobile navigation using Shadcn Sheet component (slide-out menu)
+- Active route highlighting
+- Shopping cart button placeholder for future implementation
+- Responsive design (hidden on mobile, shown on desktop)
+
+**Shadcn Components Used:**
+
+- `NavigationMenu` - Desktop navigation
+- `Sheet` - Mobile slide-out menu
+- `Button` - All interactive elements
+
+**Files Modified:**
+
+- `frontend/app/layout.tsx` - Added Navbar to root layout
+
+### 2. Functional Home Page Pagination
+
+**Files Created:**
+
+- `frontend/components/home/home-pagination.tsx`
+
+**Changes:**
+
+- Created dedicated pagination component for the home page
+- Navigation uses `/?page=X` URL pattern
+- Preserves page 1 as clean root URL (`/`)
+- Smart page number display with ellipsis
+- Previous/Next buttons with disabled states
+- Uses React's `useTransition` for loading states
+
+**Files Modified:**
+
+- `frontend/app/page.tsx`
+  - Added search params handling for page parameter
+  - Replaced static text with functional `HomePagination` component
+  - Added "Browse All Products" CTA button in hero
+  - Added "View All" button linking to products page
+
+### 3. Optimized Image Loading
+
+**Changes:**
+
+- Added blur placeholder to all product images
+- Uses base64-encoded blurDataURL for instant placeholder display
+- Reduces perceived loading time significantly
+
+**Files Modified:**
+
+- `frontend/components/products/product-card.tsx`
+  - Added `loading="lazy"` for lazy loading
+  - Added `placeholder="blur"` with blurDataURL
+- `frontend/app/products/[id]/page.tsx`
+  - Added `placeholder="blur"` with blurDataURL
+  - `priority` attribute maintained for LCP optimization
+- `frontend/app/loading.tsx`
+  - Converted to use Shadcn Skeleton and Card components
+
+### 4. Full Shadcn UI Adoption
+
+**New Components Installed:**
+
+- `navigation-menu` - For desktop navigation
+- `sheet` - For mobile menu
+- `separator` - For visual dividers
+- `skeleton` - For loading states
+- `label` - For form labels
+
+**Files Modified:**
+
+#### Category Filter (`frontend/components/products/category-filter.tsx`)
+
+- Replaced raw `<button>` elements with Shadcn `Button` component
+- Added check icon for selected categories
+- Improved visual consistency with proper variants
+
+#### Search Bar (`frontend/components/products/search-bar.tsx`)
+
+- Replaced raw clear button with Shadcn `Button` component
+- Improved hover and focus states
+
+#### Price Filter (`frontend/components/products/price-filter.tsx`)
+
+- Replaced raw `<label>` elements with Shadcn `Label` component
+
+#### Products Page (`frontend/app/products/page.tsx`)
+
+- Replaced raw sidebar `<div>` elements with Shadcn `Card` components
+- Used `CardHeader` and `CardTitle` for section titles
+- Used `CardContent` for filter content
+
+#### Loading Skeleton (`frontend/app/loading.tsx`)
+
+- Complete rewrite using Shadcn `Skeleton` component
+- Uses Shadcn `Card` for product skeleton cards
+
+---
+
+## Component Structure
+
+### New Components
+
+```
+frontend/components/
+├── layout/
+│   └── navbar.tsx          # Shared navigation component
+├── home/
+│   └── home-pagination.tsx # Home page specific pagination
+└── ui/
+    ├── navigation-menu.tsx # Shadcn NavigationMenu
+    ├── sheet.tsx           # Shadcn Sheet
+    ├── separator.tsx       # Shadcn Separator
+    ├── skeleton.tsx        # Shadcn Skeleton
+    └── label.tsx           # Shadcn Label
+```
+
+---
+
+## Technical Details
+
+### Blur Placeholder Implementation
+
+Using a pre-generated base64 blur image:
+
+```typescript
+placeholder = 'blur';
+blurDataURL = 'data:image/jpeg;base64,/9j/4AAQSkZ...';
+```
+
+This provides instant visual feedback while the actual image loads.
+
+### Navigation State Management
+
+The navbar uses `usePathname()` to determine the active route:
+
+```typescript
+const pathname = usePathname();
+// ...
+className={cn(
+  navigationMenuTriggerStyle(),
+  pathname === link.href && 'bg-accent text-accent-foreground'
+)}
+```
+
+### Mobile Menu
+
+Uses Shadcn Sheet with right-side sliding:
+
+```typescript
+<Sheet>
+  <SheetTrigger asChild className="md:hidden">
+    <Button variant="ghost" size="icon">
+      <Menu className="h-5 w-5" />
+    </Button>
+  </SheetTrigger>
+  <SheetContent side="right">
+    {/* Mobile navigation content */}
+  </SheetContent>
+</Sheet>
+```
+
+---
+
+## Testing Checklist
+
+- [x] Navbar visible on all pages
+- [x] Navbar active state shows current page
+- [x] Mobile menu opens and closes properly
+- [x] Home page pagination navigates correctly
+- [x] Images show blur placeholder while loading
+- [x] All filter components use Shadcn UI
+- [x] Loading skeletons display correctly
+- [x] Responsive design works on all screen sizes
+
+---
+
+## Dependencies Added
+
+```json
+{
+  "@radix-ui/react-navigation-menu": "^1.x",
+  "@radix-ui/react-dialog": "^1.x",
+  "@radix-ui/react-label": "^2.x"
+}
+```
+
+---
+
+## Performance Improvements
+
+1. **Blur placeholders** reduce Cumulative Layout Shift (CLS)
+2. **Lazy loading** on product cards improves initial page load
+3. **Priority loading** on product detail images optimizes LCP
+4. **Skeleton loading states** improve perceived performance
+
+---
+
+## Next Steps
+
+1. Consider adding cart badge counter to navbar
+2. Add breadcrumb navigation on product detail pages
+3. Implement search autocomplete suggestions
+4. Add category icons/images
+
+---
+
+Last Updated: December 2, 2025

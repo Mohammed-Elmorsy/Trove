@@ -67,6 +67,7 @@ Code quality reports and improvement documentation.
 ### [reviews/](./reviews/)
 
 - **[NEXTJS_REVIEW_FIXES.md](./reviews/NEXTJS_REVIEW_FIXES.md)** - Next.js 16 code review fixes (SEO, performance, accessibility)
+- **[UIUX_IMPROVEMENTS.md](./reviews/UIUX_IMPROVEMENTS.md)** - UI/UX improvements (navbar, pagination, image loading, Shadcn UI)
 
 ---
 

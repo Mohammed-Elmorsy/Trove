@@ -3,7 +3,9 @@
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 import { Category } from '@/types/product';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Check } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface CategoryFilterProps {
   categories: Category[];
@@ -49,37 +51,35 @@ export function CategoryFilter({
   };
 
   return (
-    <div className="space-y-2" role="group" aria-label="Filter by category">
-      <button
+    <div className="space-y-1" role="group" aria-label="Filter by category">
+      <Button
+        variant={!selectedCategoryId ? 'secondary' : 'ghost'}
         onClick={() => handleCategoryClick(null)}
         disabled={isPending}
-        className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
-          !selectedCategoryId ? 'bg-blue-50 text-blue-700 font-medium' : 'hover:bg-gray-100'
-        } disabled:opacity-50`}
+        className={cn('w-full justify-start', !selectedCategoryId && 'bg-primary/10 text-primary')}
         aria-label="Show all categories"
         aria-pressed={!selectedCategoryId}
       >
+        {!selectedCategoryId && <Check className="mr-2 h-4 w-4" />}
         All Categories
-      </button>
+      </Button>
 
       {categories.map((category) => (
-        <button
+        <Button
           key={category.id}
+          variant={selectedCategoryId === category.id ? 'secondary' : 'ghost'}
           onClick={() => handleCategoryClick(category.id)}
           disabled={isPending}
-          className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
-            selectedCategoryId === category.id
-              ? 'bg-blue-50 text-blue-700 font-medium'
-              : 'hover:bg-gray-100'
-          } disabled:opacity-50`}
+          className={cn(
+            'w-full justify-start',
+            selectedCategoryId === category.id && 'bg-primary/10 text-primary'
+          )}
           aria-label={`Filter by ${category.name}`}
           aria-pressed={selectedCategoryId === category.id}
         >
-          <div className="flex items-center justify-between">
-            <span>{category.name}</span>
-            {selectedCategoryId === category.id && <Badge variant="default">Selected</Badge>}
-          </div>
-        </button>
+          {selectedCategoryId === category.id && <Check className="mr-2 h-4 w-4" />}
+          {category.name}
+        </Button>
       ))}
     </div>
   );

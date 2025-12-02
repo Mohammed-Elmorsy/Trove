@@ -4,6 +4,7 @@ import { SearchBar } from '@/components/products/search-bar';
 import { CategoryFilter } from '@/components/products/category-filter';
 import { PriceFilter } from '@/components/products/price-filter';
 import { Pagination } from '@/components/products/pagination';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface SearchParams {
   search?: string;
@@ -42,36 +43,48 @@ export default async function ProductsPage({
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Sidebar Filters */}
           <aside className="lg:col-span-1 space-y-6">
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h2 className="text-lg font-semibold mb-4">Search</h2>
-              <SearchBar
-                initialSearch={params.search}
-                categoryId={params.categoryId}
-                minPrice={params.minPrice}
-                maxPrice={params.maxPrice}
-              />
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Search</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SearchBar
+                  initialSearch={params.search}
+                  categoryId={params.categoryId}
+                  minPrice={params.minPrice}
+                  maxPrice={params.maxPrice}
+                />
+              </CardContent>
+            </Card>
 
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h2 className="text-lg font-semibold mb-4">Categories</h2>
-              <CategoryFilter
-                categories={categories}
-                selectedCategoryId={params.categoryId}
-                search={params.search}
-                minPrice={params.minPrice}
-                maxPrice={params.maxPrice}
-              />
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Categories</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CategoryFilter
+                  categories={categories}
+                  selectedCategoryId={params.categoryId}
+                  search={params.search}
+                  minPrice={params.minPrice}
+                  maxPrice={params.maxPrice}
+                />
+              </CardContent>
+            </Card>
 
-            <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h2 className="text-lg font-semibold mb-4">Price Range</h2>
-              <PriceFilter
-                minPrice={params.minPrice}
-                maxPrice={params.maxPrice}
-                search={params.search}
-                categoryId={params.categoryId}
-              />
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Price Range</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <PriceFilter
+                  minPrice={params.minPrice}
+                  maxPrice={params.maxPrice}
+                  search={params.search}
+                  categoryId={params.categoryId}
+                />
+              </CardContent>
+            </Card>
           </aside>
 
           {/* Products Grid */}
@@ -104,10 +117,12 @@ export default async function ProductsPage({
                 )}
               </>
             ) : (
-              <div className="bg-white rounded-lg p-12 text-center shadow-sm">
-                <p className="text-xl text-gray-500 mb-2">No products found</p>
-                <p className="text-gray-400">Try adjusting your filters or search query</p>
-              </div>
+              <Card className="p-12 text-center">
+                <p className="text-xl text-muted-foreground mb-2">No products found</p>
+                <p className="text-muted-foreground/70">
+                  Try adjusting your filters or search query
+                </p>
+              </Card>
             )}
           </div>
         </div>

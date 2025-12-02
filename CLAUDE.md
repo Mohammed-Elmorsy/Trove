@@ -3,3 +3,4 @@
   tools to resolve library id and get library docs without me having to explicitly ask.
 - Always update docs folder on any updates (development, features, bugs, ..etc.)
 - Open any running localhost servers terminals, each on its own terminal tab.
+- For UI components, use Shadcn UI library by default unless I specify otherwise.

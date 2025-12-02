@@ -60,6 +60,14 @@
   - Copy-paste components (you own the code)
   - Tailwind-based
   - TypeScript support
+  - Components installed:
+    - Button, Card, Badge, Input, Label
+    - NavigationMenu, Sheet, Separator
+    - Skeleton (for loading states)
+- **Lucide React** - Icon library
+  - Consistent icon set
+  - Tree-shakeable
+  - TypeScript support
 
 ### State Management (Add Later)
 

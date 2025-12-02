@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 
 interface PriceFilterProps {
   minPrice?: string;
@@ -67,10 +68,8 @@ export function PriceFilter({
 
   return (
     <div className="space-y-4" role="group" aria-label="Filter by price range">
-      <div>
-        <label htmlFor="minPrice" className="text-sm text-gray-600 block mb-1">
-          Min Price
-        </label>
+      <div className="space-y-2">
+        <Label htmlFor="minPrice">Min Price</Label>
         <Input
           id="minPrice"
           type="number"
@@ -83,10 +82,8 @@ export function PriceFilter({
         />
       </div>
 
-      <div>
-        <label htmlFor="maxPrice" className="text-sm text-gray-600 block mb-1">
-          Max Price
-        </label>
+      <div className="space-y-2">
+        <Label htmlFor="maxPrice">Max Price</Label>
         <Input
           id="maxPrice"
           type="number"

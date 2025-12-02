@@ -1,8 +1,17 @@
+import Link from 'next/link';
 import { getProducts } from '@/lib/api';
 import { ProductCard } from '@/components/products/product-card';
+import { HomePagination } from '@/components/home/home-pagination';
+import { Button } from '@/components/ui/button';
 
-export default async function Home() {
-  const productsData = await getProducts({ page: 1, limit: 12 });
+interface SearchParams {
+  page?: string;
+}
+
+export default async function Home({ searchParams }: { searchParams: Promise<SearchParams> }) {
+  const params = await searchParams;
+  const page = parseInt(params.page || '1', 10);
+  const productsData = await getProducts({ page, limit: 12 });
 
   return (
     <main className="min-h-screen">
@@ -11,6 +20,11 @@ export default async function Home() {
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-5xl font-bold mb-4">Welcome to Trove</h1>
           <p className="text-xl mb-8">Discover amazing products at great prices</p>
+          <Link href="/products">
+            <Button size="lg" variant="secondary">
+              Browse All Products
+            </Button>
+          </Link>
         </div>
       </section>
 
@@ -19,10 +33,13 @@ export default async function Home() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-3xl font-bold mb-2">Featured Products</h2>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Showing {productsData.data.length} of {productsData.meta.total} products
             </p>
           </div>
+          <Link href="/products">
+            <Button variant="outline">View All</Button>
+          </Link>
         </div>
 
         {/* Products Grid */}
@@ -34,16 +51,17 @@ export default async function Home() {
           </div>
         ) : (
           <div className="text-center py-12">
-            <p className="text-xl text-gray-500">No products found</p>
+            <p className="text-xl text-muted-foreground">No products found</p>
           </div>
         )}
 
-        {/* Pagination placeholder - will be implemented next */}
+        {/* Pagination */}
         {productsData.meta.totalPages > 1 && (
-          <div className="mt-12 flex justify-center">
-            <p className="text-gray-500">
-              Page {productsData.meta.page} of {productsData.meta.totalPages}
-            </p>
+          <div className="mt-12">
+            <HomePagination
+              currentPage={productsData.meta.page}
+              totalPages={productsData.meta.totalPages}
+            />
           </div>
         )}
       </section>

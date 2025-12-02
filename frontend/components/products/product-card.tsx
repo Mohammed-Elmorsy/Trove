@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import { Product } from '@/types/product';
 import {
   Card,
@@ -11,6 +10,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ProductImage } from '@/components/ui/product-image';
 
 interface ProductCardProps {
   product: Product;
@@ -22,17 +22,11 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card className="h-full flex flex-col overflow-hidden hover:shadow-lg transition-shadow">
       <Link href={`/products/${id}`}>
-        <div className="relative aspect-square w-full overflow-hidden bg-gray-100">
+        <div className="relative aspect-square w-full overflow-hidden bg-muted">
           {imageUrl ? (
-            <Image
-              src={imageUrl}
-              alt={name}
-              fill
-              className="object-cover hover:scale-105 transition-transform duration-300"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            />
+            <ProductImage src={imageUrl} alt={name} className="hover:scale-105" />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
+            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
               No Image
             </div>
           )}
