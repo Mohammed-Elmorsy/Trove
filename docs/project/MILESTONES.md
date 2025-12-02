@@ -147,7 +147,7 @@
 - `feat: add frontend types, API client, and ProductCard component (Milestone 2 - Frontend)` (8c8edf7)
 - `feat: complete product catalog frontend with search, filters, and pagination (Milestone 2 - Complete)` (pending)
 
-**Details**: See [MILESTONE_2_PROGRESS.md](./MILESTONE_2_PROGRESS.md) for comprehensive breakdown
+**Details**: See [MILESTONE_2_PROGRESS.md](../milestones/MILESTONE_2_PROGRESS.md) for comprehensive breakdown
 
 ---
 

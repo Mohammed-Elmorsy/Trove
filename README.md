@@ -63,11 +63,11 @@ trove/
 │   └── lib/             # Utilities
 │
 ├── docs/                # Documentation
-│   ├── PROJECT_OVERVIEW.md
-│   ├── TECH_STACK.md
-│   ├── MILESTONES.md
-│   ├── ARCHITECTURE.md
-│   └── SETUP.md
+│   ├── project/         # Project overview and planning
+│   ├── milestones/      # Milestone progress reports
+│   ├── architecture/    # Technical architecture
+│   ├── guides/          # Development guides
+│   └── reviews/         # Code reviews
 │
 ├── docker-compose.yml   # Docker services
 └── README.md
@@ -179,16 +179,30 @@ npx prisma migrate reset
 - [ ] **Milestone 5**: Admin Panel Basics (Full-Stack)
 - [ ] **Milestone 6**: User Authentication & Authorization (Full-Stack)
 
-See [docs/MILESTONES.md](docs/MILESTONES.md) for detailed breakdown.
+See [docs/project/MILESTONES.md](docs/project/MILESTONES.md) for detailed breakdown.
 
 ## Documentation
 
-- [Project Overview](docs/PROJECT_OVERVIEW.md) - High-level overview and goals
-- [Tech Stack](docs/TECH_STACK.md) - Technology choices and rationale
-- [Milestones](docs/MILESTONES.md) - Detailed development roadmap
-- [Architecture](docs/ARCHITECTURE.md) - System architecture and design
-- [Setup Guide](docs/SETUP.md) - Detailed setup instructions
-- [Commit Conventions](docs/COMMIT_CONVENTIONS.md) - Git commit message standards
+### Project Planning
+
+- [Project Overview](docs/project/PROJECT_OVERVIEW.md) - High-level overview and goals
+- [Milestones](docs/project/MILESTONES.md) - Detailed development roadmap
+
+### Technical Architecture
+
+- [Architecture](docs/architecture/ARCHITECTURE.md) - System architecture and design
+- [Tech Stack](docs/architecture/TECH_STACK.md) - Technology choices and rationale
+- [Configuration](docs/architecture/CONFIGURATION.md) - Advanced configuration system
+- [Setup Guide](docs/architecture/SETUP.md) - Detailed setup instructions
+
+### Development Guides
+
+- [Commit Conventions](docs/guides/COMMIT_CONVENTIONS.md) - Git commit message standards
+- [Claude Agents](docs/guides/CLAUDE_AGENTS.md) - Custom Claude Code agents
+
+### Code Reviews
+
+- [Next.js Review Fixes](docs/reviews/NEXTJS_REVIEW_FIXES.md) - Next.js 16 code review improvements
 
 ## API Endpoints (Coming in Milestone 2)
 
@@ -229,7 +243,7 @@ fix: correct cart calculation
 docs: update setup guide
 ```
 
-See [COMMIT_CONVENTIONS.md](docs/COMMIT_CONVENTIONS.md) for detailed guidelines.
+See [COMMIT_CONVENTIONS.md](docs/guides/COMMIT_CONVENTIONS.md) for detailed guidelines.
 
 The commit message will be automatically validated by Commitlint before each commit.
 
