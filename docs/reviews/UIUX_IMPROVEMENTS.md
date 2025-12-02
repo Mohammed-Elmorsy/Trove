@@ -71,20 +71,24 @@ This document tracks the UI/UX improvements made to the Trove e-commerce applica
 
 ### 3. Optimized Image Loading
 
+**Files Created:**
+
+- `frontend/components/ui/product-image.tsx`
+
 **Changes:**
 
-- Added blur placeholder to all product images
-- Uses base64-encoded blurDataURL for instant placeholder display
-- Reduces perceived loading time significantly
+- Created reusable `ProductImage` component wrapping Next.js Image
+- Uses native `loading="lazy"` for product cards (browser handles lazy loading)
+- Uses `priority={true}` for product details page (preloads above-the-fold image)
+- Added smooth hover transition (`transition-transform duration-300 ease-out`)
+- Relies on Next.js and browser caching for optimal performance
 
 **Files Modified:**
 
 - `frontend/components/products/product-card.tsx`
-  - Added `loading="lazy"` for lazy loading
-  - Added `placeholder="blur"` with blurDataURL
+  - Uses `ProductImage` component with `hover:scale-105` effect
 - `frontend/app/products/[id]/page.tsx`
-  - Added `placeholder="blur"` with blurDataURL
-  - `priority` attribute maintained for LCP optimization
+  - Uses `ProductImage` component with `priority` for instant loading
 - `frontend/app/loading.tsx`
   - Converted to use Shadcn Skeleton and Card components
 
@@ -139,6 +143,7 @@ frontend/components/
 ├── home/
 │   └── home-pagination.tsx # Home page specific pagination
 └── ui/
+    ├── product-image.tsx   # Reusable product image component
     ├── navigation-menu.tsx # Shadcn NavigationMenu
     ├── sheet.tsx           # Shadcn Sheet
     ├── separator.tsx       # Shadcn Separator
@@ -150,16 +155,29 @@ frontend/components/
 
 ## Technical Details
 
-### Blur Placeholder Implementation
+### ProductImage Component
 
-Using a pre-generated base64 blur image:
+Simple wrapper around Next.js Image for consistent usage:
 
 ```typescript
-placeholder = 'blur';
-blurDataURL = 'data:image/jpeg;base64,/9j/4AAQSkZ...';
+export function ProductImage({ src, alt, className, priority = false }: ProductImageProps) {
+  return (
+    <Image
+      src={src}
+      alt={alt}
+      fill
+      className={cn('object-cover transition-transform duration-300 ease-out', className)}
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      loading={priority ? undefined : 'lazy'}
+      priority={priority}
+    />
+  );
+}
 ```
 
-This provides instant visual feedback while the actual image loads.
+- **Product cards**: `loading="lazy"` - loads images as user scrolls
+- **Product details**: `priority={true}` - preloads for instant display
+- **Hover effect**: Smooth scale transition on product cards
 
 ### Navigation State Management
 
@@ -199,7 +217,9 @@ Uses Shadcn Sheet with right-side sliding:
 - [x] Navbar active state shows current page
 - [x] Mobile menu opens and closes properly
 - [x] Home page pagination navigates correctly
-- [x] Images show blur placeholder while loading
+- [x] Images lazy load on scroll (product cards)
+- [x] Images load instantly on product details (priority)
+- [x] Smooth hover transition on product images
 - [x] All filter components use Shadcn UI
 - [x] Loading skeletons display correctly
 - [x] Responsive design works on all screen sizes
@@ -220,10 +240,11 @@ Uses Shadcn Sheet with right-side sliding:
 
 ## Performance Improvements
 
-1. **Blur placeholders** reduce Cumulative Layout Shift (CLS)
-2. **Lazy loading** on product cards improves initial page load
-3. **Priority loading** on product detail images optimizes LCP
-4. **Skeleton loading states** improve perceived performance
+1. **Native lazy loading** - Images load only when scrolled into view
+2. **Priority loading** - Product detail images preload for instant display
+3. **Browser caching** - Navigating back shows cached images instantly
+4. **Skeleton loading states** - Improve perceived performance during data fetch
+5. **Simple implementation** - No custom state management, relies on Next.js optimizations
 
 ---
 
