@@ -52,7 +52,7 @@ export function SearchBar({ initialSearch = '', categoryId, minPrice, maxPrice }
   };
 
   return (
-    <form onSubmit={handleSearch} className="flex gap-2">
+    <form onSubmit={handleSearch} className="flex gap-2" role="search" aria-label="Product search">
       <div className="relative flex-1">
         <Input
           type="text"
@@ -60,18 +60,20 @@ export function SearchBar({ initialSearch = '', categoryId, minPrice, maxPrice }
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="pr-8"
+          aria-label="Search products"
         />
         {searchTerm && (
           <button
             type="button"
             onClick={handleClear}
             className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+            aria-label="Clear search"
           >
             <X className="h-4 w-4" />
           </button>
         )}
       </div>
-      <Button type="submit" size="icon" disabled={isPending}>
+      <Button type="submit" size="icon" disabled={isPending} aria-label="Submit search">
         <Search className="h-4 w-4" />
       </Button>
     </form>

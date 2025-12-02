@@ -2,3 +2,4 @@
   library/API documentation. This means you should automatically use the Context7 MCP
   tools to resolve library id and get library docs without me having to explicitly ask.
 - Always update docs folder on any updates (development, features, bugs, ..etc.)
+- Open any running localhost servers terminals, each on its own terminal tab.

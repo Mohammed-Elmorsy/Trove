@@ -78,12 +78,17 @@ export function Pagination({
   };
 
   return (
-    <div className="flex items-center justify-center gap-2">
+    <nav
+      className="flex items-center justify-center gap-2"
+      role="navigation"
+      aria-label="Pagination"
+    >
       <Button
         variant="outline"
         size="icon"
         onClick={() => navigateToPage(currentPage - 1)}
         disabled={currentPage === 1 || isPending}
+        aria-label="Go to previous page"
       >
         <ChevronLeft className="h-4 w-4" />
       </Button>
@@ -95,11 +100,13 @@ export function Pagination({
             variant={page === currentPage ? 'default' : 'outline'}
             onClick={() => navigateToPage(page)}
             disabled={isPending}
+            aria-label={`Go to page ${page}`}
+            aria-current={page === currentPage ? 'page' : undefined}
           >
             {page}
           </Button>
         ) : (
-          <span key={index} className="px-2">
+          <span key={index} className="px-2" aria-hidden="true">
             {page}
           </span>
         )
@@ -110,9 +117,10 @@ export function Pagination({
         size="icon"
         onClick={() => navigateToPage(currentPage + 1)}
         disabled={currentPage === totalPages || isPending}
+        aria-label="Go to next page"
       >
         <ChevronRight className="h-4 w-4" />
       </Button>
-    </div>
+    </nav>
   );
 }

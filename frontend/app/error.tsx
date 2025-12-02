@@ -11,7 +11,35 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
+    // Log error to console
     console.error('Error:', error);
+
+    // TODO: Integrate with error tracking service (e.g., Sentry, LogRocket, etc.)
+    // Example for Sentry:
+    // if (typeof window !== 'undefined' && window.Sentry) {
+    //   window.Sentry.captureException(error, {
+    //     tags: {
+    //       digest: error.digest,
+    //       component: 'error-boundary',
+    //     },
+    //   });
+    // }
+
+    // You can also send to a custom error tracking endpoint
+    if (process.env.NEXT_PUBLIC_ERROR_TRACKING_ENABLED === 'true') {
+      fetch('/api/log-error', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: error.message,
+          stack: error.stack,
+          digest: error.digest,
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent,
+          url: window.location.href,
+        }),
+      }).catch((err) => console.error('Failed to log error:', err));
+    }
   }, [error]);
 
   return (

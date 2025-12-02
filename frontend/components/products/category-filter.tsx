@@ -49,13 +49,15 @@ export function CategoryFilter({
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2" role="group" aria-label="Filter by category">
       <button
         onClick={() => handleCategoryClick(null)}
         disabled={isPending}
         className={`w-full text-left px-3 py-2 rounded-md transition-colors ${
           !selectedCategoryId ? 'bg-blue-50 text-blue-700 font-medium' : 'hover:bg-gray-100'
         } disabled:opacity-50`}
+        aria-label="Show all categories"
+        aria-pressed={!selectedCategoryId}
       >
         All Categories
       </button>
@@ -70,6 +72,8 @@ export function CategoryFilter({
               ? 'bg-blue-50 text-blue-700 font-medium'
               : 'hover:bg-gray-100'
           } disabled:opacity-50`}
+          aria-label={`Filter by ${category.name}`}
+          aria-pressed={selectedCategoryId === category.id}
         >
           <div className="flex items-center justify-between">
             <span>{category.name}</span>

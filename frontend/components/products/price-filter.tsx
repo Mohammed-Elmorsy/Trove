@@ -43,6 +43,15 @@ export function PriceFilter({
   };
 
   const handleApply = () => {
+    // Validate that min <= max
+    const minValue = parseFloat(min);
+    const maxValue = parseFloat(max);
+
+    if (min && max && minValue > maxValue) {
+      alert('Minimum price cannot be greater than maximum price');
+      return;
+    }
+
     startTransition(() => {
       router.push(buildUrl(min, max));
     });
@@ -57,7 +66,7 @@ export function PriceFilter({
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" role="group" aria-label="Filter by price range">
       <div>
         <label htmlFor="minPrice" className="text-sm text-gray-600 block mb-1">
           Min Price
@@ -70,6 +79,7 @@ export function PriceFilter({
           step="0.01"
           value={min}
           onChange={(e) => setMin(e.target.value)}
+          aria-label="Minimum price"
         />
       </div>
 
@@ -85,15 +95,27 @@ export function PriceFilter({
           step="0.01"
           value={max}
           onChange={(e) => setMax(e.target.value)}
+          aria-label="Maximum price"
         />
       </div>
 
       <div className="flex gap-2">
-        <Button onClick={handleApply} className="flex-1" disabled={isPending}>
+        <Button
+          onClick={handleApply}
+          className="flex-1"
+          disabled={isPending}
+          aria-label="Apply price filter"
+        >
           Apply
         </Button>
         {(min || max) && (
-          <Button onClick={handleClear} variant="outline" className="flex-1" disabled={isPending}>
+          <Button
+            onClick={handleClear}
+            variant="outline"
+            className="flex-1"
+            disabled={isPending}
+            aria-label="Clear price filter"
+          >
             Clear
           </Button>
         )}

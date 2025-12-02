@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import { getProducts, getCategories } from '@/lib/api';
 import { ProductCard } from '@/components/products/product-card';
 import { SearchBar } from '@/components/products/search-bar';
@@ -45,39 +44,33 @@ export default async function ProductsPage({
           <aside className="lg:col-span-1 space-y-6">
             <div className="bg-white rounded-lg p-6 shadow-sm">
               <h2 className="text-lg font-semibold mb-4">Search</h2>
-              <Suspense fallback={<div className="h-10 bg-gray-100 animate-pulse rounded" />}>
-                <SearchBar
-                  initialSearch={params.search}
-                  categoryId={params.categoryId}
-                  minPrice={params.minPrice}
-                  maxPrice={params.maxPrice}
-                />
-              </Suspense>
+              <SearchBar
+                initialSearch={params.search}
+                categoryId={params.categoryId}
+                minPrice={params.minPrice}
+                maxPrice={params.maxPrice}
+              />
             </div>
 
             <div className="bg-white rounded-lg p-6 shadow-sm">
               <h2 className="text-lg font-semibold mb-4">Categories</h2>
-              <Suspense fallback={<div className="h-32 bg-gray-100 animate-pulse rounded" />}>
-                <CategoryFilter
-                  categories={categories}
-                  selectedCategoryId={params.categoryId}
-                  search={params.search}
-                  minPrice={params.minPrice}
-                  maxPrice={params.maxPrice}
-                />
-              </Suspense>
+              <CategoryFilter
+                categories={categories}
+                selectedCategoryId={params.categoryId}
+                search={params.search}
+                minPrice={params.minPrice}
+                maxPrice={params.maxPrice}
+              />
             </div>
 
             <div className="bg-white rounded-lg p-6 shadow-sm">
               <h2 className="text-lg font-semibold mb-4">Price Range</h2>
-              <Suspense fallback={<div className="h-40 bg-gray-100 animate-pulse rounded" />}>
-                <PriceFilter
-                  minPrice={params.minPrice}
-                  maxPrice={params.maxPrice}
-                  search={params.search}
-                  categoryId={params.categoryId}
-                />
-              </Suspense>
+              <PriceFilter
+                minPrice={params.minPrice}
+                maxPrice={params.maxPrice}
+                search={params.search}
+                categoryId={params.categoryId}
+              />
             </div>
           </aside>
 
@@ -99,16 +92,14 @@ export default async function ProductsPage({
 
                 {productsData.meta.totalPages > 1 && (
                   <div className="mt-8">
-                    <Suspense fallback={<div className="h-12 bg-gray-100 animate-pulse rounded" />}>
-                      <Pagination
-                        currentPage={productsData.meta.page}
-                        totalPages={productsData.meta.totalPages}
-                        search={params.search}
-                        categoryId={params.categoryId}
-                        minPrice={params.minPrice}
-                        maxPrice={params.maxPrice}
-                      />
-                    </Suspense>
+                    <Pagination
+                      currentPage={productsData.meta.page}
+                      totalPages={productsData.meta.totalPages}
+                      search={params.search}
+                      categoryId={params.categoryId}
+                      minPrice={params.minPrice}
+                      maxPrice={params.maxPrice}
+                    />
                   </div>
                 )}
               </>
