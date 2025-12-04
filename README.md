@@ -14,11 +14,20 @@ A modern, full-stack e-commerce application built with Next.js, Nest.js, Postgre
 
 ## Features
 
-- **Product Catalog** - Browse and search products
-- **Shopping Cart** - Add, update, and remove items
-- **Checkout & Orders** - Complete purchases and track orders
-- **Admin Panel** - Manage products and orders
-- **User Authentication** - Secure user accounts (coming soon)
+### Implemented
+
+- **Product Catalog** - Browse products with advanced search, category filters, and price range filters
+- **Category System** - Products organized by categories (Electronics, Clothing, Home & Garden, Sports)
+- **Responsive Design** - Mobile-first UI with responsive grid layouts (1-4 columns)
+- **Smart Pagination** - Page numbers with ellipsis for large datasets
+- **Shared Navigation** - Responsive navbar with mobile slide-out menu
+
+### Coming Soon
+
+- **Shopping Cart** - Add, update, and remove items (Milestone 3)
+- **Checkout & Orders** - Complete purchases and track orders (Milestone 4)
+- **Admin Panel** - Manage products and orders (Milestone 5)
+- **User Authentication** - Secure user accounts (Milestone 6)
 
 ## Tech Stack
 
@@ -173,7 +182,7 @@ npx prisma migrate reset
 ## Project Milestones
 
 - [x] **Milestone 1**: Project Setup & Infrastructure
-- [ ] **Milestone 2**: Product Catalog (Full-Stack)
+- [x] **Milestone 2**: Product Catalog (Full-Stack) ✅
 - [ ] **Milestone 3**: Shopping Cart (Full-Stack)
 - [ ] **Milestone 4**: Checkout & Orders (Full-Stack)
 - [ ] **Milestone 5**: Admin Panel Basics (Full-Stack)
@@ -200,19 +209,34 @@ See [docs/project/MILESTONES.md](docs/project/MILESTONES.md) for detailed breakd
 - [Commit Conventions](docs/guides/COMMIT_CONVENTIONS.md) - Git commit message standards
 - [Claude Agents](docs/guides/CLAUDE_AGENTS.md) - Custom Claude Code agents
 
+### Milestones
+
+- [Milestone 2 Progress](docs/milestones/MILESTONE_2_PROGRESS.md) - Product Catalog completion report
+
 ### Code Reviews
 
 - [Next.js Review Fixes](docs/reviews/NEXTJS_REVIEW_FIXES.md) - Next.js 16 code review improvements
+- [UI/UX Improvements](docs/reviews/UIUX_IMPROVEMENTS.md) - UI/UX enhancements and fixes
 
-## API Endpoints (Coming in Milestone 2)
+## API Endpoints
 
-### Products
+### Products ✅
 
-- `GET /products` - List all products
-- `GET /products/:id` - Get single product
-- `POST /products` - Create product (admin)
-- `PUT /products/:id` - Update product (admin)
-- `DELETE /products/:id` - Delete product (admin)
+| Method   | Endpoint               | Description                                    |
+| -------- | ---------------------- | ---------------------------------------------- |
+| `GET`    | `/products`            | List products with search, filters, pagination |
+| `GET`    | `/products/:id`        | Get single product with category               |
+| `GET`    | `/products/categories` | Get all categories                             |
+| `POST`   | `/products`            | Create product (admin)                         |
+| `PATCH`  | `/products/:id`        | Update product (admin)                         |
+| `DELETE` | `/products/:id`        | Delete product (admin)                         |
+
+**Query Parameters for `GET /products`:**
+
+- `search` - Search by name or description
+- `categoryId` - Filter by category
+- `minPrice` / `maxPrice` - Filter by price range
+- `page` / `limit` - Pagination (default: page=1, limit=12)
 
 ### Cart (Coming in Milestone 3)
 
@@ -253,4 +277,4 @@ MIT
 
 ---
 
-**Current Status:** Milestone 1 Complete - Ready for development!
+**Current Status:** Milestone 2 Complete - Product Catalog fully functional with search, filters, and pagination!
