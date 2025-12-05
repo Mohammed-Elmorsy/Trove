@@ -6,15 +6,19 @@ import {
   IsInt,
   IsNotEmpty,
   IsUUID,
+  MaxLength,
+  IsUrl,
 } from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
   @IsNotEmpty()
+  @MaxLength(200)
   name: string;
 
   @IsString()
   @IsOptional()
+  @MaxLength(5000)
   description?: string;
 
   @IsNumber({ maxDecimalPlaces: 2 })
@@ -23,6 +27,8 @@ export class CreateProductDto {
 
   @IsString()
   @IsOptional()
+  @IsUrl({ protocols: ['http', 'https'], require_protocol: true })
+  @MaxLength(2048)
   imageUrl?: string;
 
   @IsUUID()

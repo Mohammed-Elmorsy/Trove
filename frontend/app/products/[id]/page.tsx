@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getProduct } from '@/lib/api';
+import { escapeHtmlForJsonLd } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -69,12 +70,12 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   const isOutOfStock = product.stock === 0;
   const isLowStock = product.stock > 0 && product.stock < 10;
 
-  // JSON-LD structured data for SEO
+  // JSON-LD structured data for SEO (sanitized to prevent XSS)
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: product.name,
-    description: product.description || 'No description available',
+    name: escapeHtmlForJsonLd(product.name),
+    description: escapeHtmlForJsonLd(product.description) || 'No description available',
     image: product.imageUrl || '',
     sku: product.id,
     brand: {
@@ -89,7 +90,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       availability: isOutOfStock ? 'https://schema.org/OutOfStock' : 'https://schema.org/InStock',
       itemCondition: 'https://schema.org/NewCondition',
     },
-    category: product.category.name,
+    category: escapeHtmlForJsonLd(product.category.name),
   };
 
   return (

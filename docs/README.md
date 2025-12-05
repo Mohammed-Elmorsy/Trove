@@ -66,6 +66,7 @@ Code quality reports and improvement documentation.
 
 ### [reviews/](./reviews/)
 
+- **[SECURITY_IMPROVEMENTS.md](./reviews/SECURITY_IMPROVEMENTS.md)** - Security enhancements (Helmet, rate limiting, validation, XSS prevention)
 - **[NEXTJS_REVIEW_FIXES.md](./reviews/NEXTJS_REVIEW_FIXES.md)** - Next.js 16 code review fixes (SEO, performance, accessibility)
 - **[UIUX_IMPROVEMENTS.md](./reviews/UIUX_IMPROVEMENTS.md)** - UI/UX improvements (navbar, pagination, image loading, Shadcn UI)
 
@@ -133,5 +134,5 @@ As the project evolves, please:
 
 ---
 
-**Last Updated**: December 2, 2025
+**Last Updated**: December 5, 2025
 **Current Milestone**: 3 - Shopping Cart (In Progress)
