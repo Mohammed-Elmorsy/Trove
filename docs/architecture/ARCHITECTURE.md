@@ -165,11 +165,18 @@ frontend/
 ├── app/
 │   ├── layout.tsx              # Root layout
 │   ├── page.tsx                # Home page
+│   ├── error.tsx               # Global error boundary
+│   ├── loading.tsx             # Global loading state
 │   │
 │   ├── products/               # Product routes
 │   │   ├── page.tsx            # Product listing
+│   │   ├── error.tsx           # Products list error boundary
+│   │   ├── loading.tsx         # Products list loading skeleton
 │   │   └── [id]/
-│   │       └── page.tsx        # Product detail
+│   │       ├── page.tsx        # Product detail
+│   │       ├── error.tsx       # Product detail error boundary
+│   │       ├── loading.tsx     # Product detail loading skeleton
+│   │       └── not-found.tsx   # Product not found page
 │   │
 │   ├── cart/
 │   │   └── page.tsx            # Cart page
