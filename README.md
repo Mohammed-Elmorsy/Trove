@@ -1,8 +1,8 @@
 # Trove - E-Commerce Application
 
-![Next.js](https://img.shields.io/badge/Next.js-16.0.5-black?style=flat&logo=next.js&logoColor=white)
-![React](https://img.shields.io/badge/React-19.2.0-blue?style=flat&logo=react&logoColor=white)
-![NestJS](https://img.shields.io/badge/NestJS-11.1.9-E0234E?style=flat&logo=nestjs&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-16.0.7-black?style=flat&logo=next.js&logoColor=white)
+![React](https://img.shields.io/badge/React-19.2.1-blue?style=flat&logo=react&logoColor=white)
+![NestJS](https://img.shields.io/badge/NestJS-11.0.1-E0234E?style=flat&logo=nestjs&logoColor=white)
 ![Prisma](https://img.shields.io/badge/Prisma-7.0.1-2D3748?style=flat&logo=prisma&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?style=flat&logo=postgresql&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat&logo=typescript&logoColor=white)
