@@ -2,27 +2,27 @@
 
 ## Project Status Overview
 
-**Current Phase**: Milestone 2 Complete! Ready for Milestone 3 - Shopping Cart
+**Current Phase**: Milestone 3 Complete! Ready for Milestone 4 - Checkout & Orders
 
 | Milestone                         | Status         | Progress | Details                                         |
 | --------------------------------- | -------------- | -------- | ----------------------------------------------- |
 | 1. Project Setup & Infrastructure | ✅ Complete    | 100%     | All setup done + enhanced configuration         |
 | 2. Product Catalog                | ✅ Complete    | 100%     | Backend & frontend complete with search/filters |
-| 3. Shopping Cart                  | ⏳ Not Started | 0%       | Planned                                         |
+| 3. Shopping Cart                  | ✅ Complete    | 100%     | Session-based cart with full CRUD               |
 | 4. Checkout & Orders              | ⏳ Not Started | 0%       | Planned                                         |
 | 5. Admin Panel                    | ⏳ Not Started | 0%       | Planned                                         |
 | 6. Authentication                 | ⏳ Not Started | 0%       | Planned                                         |
 
 **Recent Achievements**:
 
-- ✅ **Milestone 2 Complete!** Full product catalog with search, filters, and pagination
-- ✅ Product listing page with responsive grid
-- ✅ Product detail pages with stock indicators
-- ✅ Search bar with real-time filtering
-- ✅ Category and price filters with URL state
-- ✅ Smart pagination with ellipsis
-- ✅ **Code Review Complete!** All 11 issues fixed (SEO, performance, accessibility)
-- ✅ **UI/UX Improvements!** Shared navbar, functional home pagination, optimized images
+- ✅ **Milestone 3 Complete!** Full shopping cart with session-based persistence
+- ✅ Add to cart with quantity selector and dual feedback (toast + button state)
+- ✅ Cart page with item management (update quantity, remove, clear all)
+- ✅ Cart badge in navbar showing item count
+- ✅ Order summary with subtotal, shipping, and free shipping threshold
+- ✅ Stock validation prevents over-ordering
+- ✅ Toast notifications using Sonner
+- ✅ Loading and error states for cart page
 
 **UI/UX Improvements (December 2, 2025)**:
 
@@ -41,12 +41,12 @@
 - ✅ Error Tracking: Integration points for Sentry/custom services
 - ✅ Code Quality: Fixed TypeScript config, removed unnecessary Suspense boundaries
 
-**Next Steps** (Milestone 3 - Shopping Cart):
+**Next Steps** (Milestone 4 - Checkout & Orders):
 
-- 🎯 Design Cart & CartItem schema
-- 🎯 Implement session-based cart backend
-- 🎯 Build cart UI with quantity controls
-- 🎯 Add cart icon with item count in header
+- 🎯 Design Order & OrderItem schema
+- 🎯 Create order endpoint from cart
+- 🎯 Build checkout form with shipping info
+- 🎯 Order confirmation and lookup pages
 
 ---
 
@@ -160,41 +160,64 @@
 
 ---
 
-## Milestone 3: Shopping Cart (Full-Stack)
+## Milestone 3: Shopping Cart (Full-Stack) ✅ (Completed)
 
 **Goal**: Add items to cart and manage quantities
+**Completion Date**: December 6, 2025
 
-### Backend
+### Backend ✅ (Completed)
 
-- [ ] Design Cart & CartItem schema
-- [ ] Session-based cart (no auth)
-- [ ] Add to cart endpoint
-- [ ] Update quantity endpoint
-- [ ] Remove from cart endpoint
-- [ ] Get cart endpoint
-- [ ] Clear cart endpoint
+- [x] Design Cart & CartItem schema (Prisma)
+  - [x] Cart model with sessionId for persistence
+  - [x] CartItem model with quantity and product relation
+  - [x] Unique constraint on cartId + productId
+  - [x] Cascade delete on cart removal
+- [x] Session-based cart (no auth required)
+- [x] Add to cart endpoint (POST /cart/items)
+  - [x] Creates cart if doesn't exist
+  - [x] Increments quantity if item exists
+  - [x] Stock validation
+- [x] Update quantity endpoint (PATCH /cart/items/:itemId)
+- [x] Remove from cart endpoint (DELETE /cart/items/:itemId)
+- [x] Get cart endpoint (GET /cart/:sessionId)
+- [x] Clear cart endpoint (DELETE /cart/:sessionId)
+- [x] DTOs with validation (AddToCartDto, UpdateCartItemDto)
 
-### Frontend
+### Frontend ✅ (Completed)
 
-- [ ] Add to cart button on products
-- [ ] Cart page
-- [ ] Cart icon with item count (header)
-- [ ] Update quantity controls
-- [ ] Remove item button
-- [ ] Cart summary (subtotal, total)
-- [ ] Empty cart state
-- [ ] Consider adding Tanstack Query for optimistic updates
+- [x] Cart types (Cart, CartItem, AddToCartRequest)
+- [x] Cart API functions (getCart, addToCart, updateCartItem, removeCartItem, clearCart)
+- [x] useCart hook with React Context (CartProvider)
+- [x] Session ID generation with uuid, stored in localStorage
+- [x] Add to cart button on product detail page
+  - [x] Simple +/- quantity buttons
+  - [x] Dual feedback: toast notification + button state change
+  - [x] Low stock warning
+- [x] Cart page at /cart
+  - [x] Item list with product images and details
+  - [x] Quantity controls (+/- buttons)
+  - [x] Remove item button
+  - [x] Clear cart button
+  - [x] Continue Shopping link
+- [x] Cart icon with item count in navbar (CartBadge)
+- [x] Cart summary (subtotal, shipping, total)
+  - [x] Free shipping threshold ($50)
+- [x] Empty cart state with "Start Shopping" CTA
+- [x] Loading state (skeleton)
+- [x] Error state with retry
+- [x] Toast notifications (Sonner via Shadcn)
 
-### Success Criteria
+### Success Criteria - All Met! ✅
 
-- Can add products to cart
-- Cart persists in database
-- Can update quantities
-- Can remove items
-- Cart total calculates correctly
-- Session maintains cart state
+- ✅ Can add products to cart from product detail page
+- ✅ Cart persists in database (PostgreSQL)
+- ✅ Can update quantities with +/- buttons
+- ✅ Can remove individual items
+- ✅ Cart total calculates correctly
+- ✅ Session maintains cart state (localStorage + backend)
+- ✅ Stock validation prevents over-ordering
 
-**Commit**: "feat: shopping cart with session persistence"
+**Details**: See [MILESTONE_3_PROGRESS.md](../milestones/MILESTONE_3_PROGRESS.md) for comprehensive breakdown
 
 ---
 

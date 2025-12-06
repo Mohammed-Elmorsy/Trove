@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-import { Menu, ShoppingCart, Store, X } from 'lucide-react';
+import { Menu, Store, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle } from '@/components/ui/sheet';
 import {
@@ -14,6 +14,7 @@ import {
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
+import { CartBadge } from './cart-badge';
 
 const navLinks = [
   { href: '/', label: 'Home' },
@@ -57,11 +58,10 @@ export function Navbar() {
 
           {/* Right Section */}
           <div className="flex items-center gap-4">
-            {/* Cart Button (placeholder for future) */}
-            <Button variant="ghost" size="icon" className="hidden md:flex">
-              <ShoppingCart className="h-5 w-5" />
-              <span className="sr-only">Shopping Cart</span>
-            </Button>
+            {/* Cart Badge */}
+            <div className="hidden md:flex">
+              <CartBadge />
+            </div>
 
             {/* Mobile Menu */}
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -95,9 +95,11 @@ export function Navbar() {
                   </nav>
                   <div className="mt-4 pt-4 border-t">
                     <SheetClose asChild>
-                      <Button className="w-full" size="lg">
-                        <ShoppingCart className="mr-2 h-5 w-5" />
-                        View Cart
+                      <Button className="w-full" size="lg" asChild>
+                        <Link href="/cart">
+                          <ShoppingCart className="mr-2 h-5 w-5" />
+                          View Cart
+                        </Link>
                       </Button>
                     </SheetClose>
                   </div>

@@ -33,6 +33,7 @@ Detailed progress reports for completed milestones.
 ### [milestones/](./milestones/)
 
 - **[MILESTONE_2_PROGRESS.md](./milestones/MILESTONE_2_PROGRESS.md)** - Product Catalog implementation details
+- **[MILESTONE_3_PROGRESS.md](./milestones/MILESTONE_3_PROGRESS.md)** - Shopping Cart implementation details
 
 ---
 
@@ -91,7 +92,8 @@ Code quality reports and improvement documentation.
 
 - **Milestone 1**: ✅ Complete - Project Setup
 - **Milestone 2**: ✅ Complete - Product Catalog
-- **Milestone 3**: ⏳ Not Started - Shopping Cart
+- **Milestone 3**: ✅ Complete - Shopping Cart
+- **Milestone 4**: ⏳ Not Started - Checkout & Orders
 - **Code Quality**: Grade A (see [NEXTJS_REVIEW_FIXES.md](./reviews/NEXTJS_REVIEW_FIXES.md))
 
 ### Security Notices
@@ -139,4 +141,4 @@ As the project evolves, please:
 ---
 
 **Last Updated**: December 6, 2025
-**Current Milestone**: 2 - Product Catalog (Complete)
+**Current Milestone**: 3 - Shopping Cart (Complete)

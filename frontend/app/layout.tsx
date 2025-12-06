@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import { Navbar } from '@/components/layout/navbar';
+import { CartProvider } from '@/components/providers/cart-provider';
+import { Toaster } from '@/components/ui/sonner';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -63,8 +65,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <Navbar />
-        {children}
+        <CartProvider>
+          <Navbar />
+          {children}
+          <Toaster position="bottom-right" richColors />
+        </CartProvider>
       </body>
     </html>
   );

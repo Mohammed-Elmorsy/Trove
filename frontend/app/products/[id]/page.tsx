@@ -3,12 +3,11 @@ import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getProduct } from '@/lib/api';
 import { escapeHtmlForJsonLd } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { ShoppingCart } from 'lucide-react';
 import { ProductImage } from '@/components/ui/product-image';
 import { PageBreadcrumb } from '@/components/layout/page-breadcrumb';
+import { AddToCartButton } from '@/components/products/add-to-cart-button';
 
 export async function generateMetadata({
   params,
@@ -183,12 +182,13 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                 </CardContent>
               </Card>
 
-              {/* Action Buttons */}
+              {/* Add to Cart */}
               <div className="space-y-3">
-                <Button size="lg" className="w-full text-lg" disabled={isOutOfStock}>
-                  <ShoppingCart className="mr-2 h-5 w-5" />
-                  {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
-                </Button>
+                <AddToCartButton
+                  productId={product.id}
+                  productName={product.name}
+                  stock={product.stock}
+                />
                 <p className="text-sm text-gray-500 text-center">
                   {isOutOfStock
                     ? 'This product is currently unavailable'
