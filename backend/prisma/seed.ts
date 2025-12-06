@@ -132,7 +132,8 @@ async function main() {
       description:
         'Programmable coffee maker with thermal carafe, brew strength control, and automatic shut-off.',
       price: 79.99,
-      imageUrl: 'https://images.unsplash.com/photo-1517668808822-9ebb02f2a0e6',
+      imageUrl:
+        'https://www.foodandwine.com/thmb/fIx24SkrW650rc_aSk9CHDyiZ6I=/fit-in/1500x2668/filters:no_upscale():max_bytes(150000):strip_icc()/faw-espresso-machines-test-delonghi-stilosa-manual-nsimpson-584-13fa2c1da3644eecabc0f0f20a234773.jpeg',
       categoryId: categoryMap['home-kitchen'],
       stock: 40,
     },
@@ -195,7 +196,8 @@ async function main() {
       description:
         'Set of 5 resistance bands with different strength levels, perfect for home workouts.',
       price: 19.99,
-      imageUrl: 'https://images.unsplash.com/photo-1598289431512-b97b0917affc',
+      imageUrl:
+        'https://blackmountainproducts.com/wp-content/uploads/2015/04/17.jpg',
       categoryId: categoryMap['sports'],
       stock: 150,
     },
@@ -213,7 +215,8 @@ async function main() {
       description:
         'High-speed blender perfect for smoothies, shakes, and frozen drinks. Easy to clean.',
       price: 69.99,
-      imageUrl: 'https://images.unsplash.com/photo-1570831739435-6601aa3fa4fb',
+      imageUrl:
+        'https://m.media-amazon.com/images/I/71yAShlixcL._AC_UF894,1000_QL80_.jpg',
       categoryId: categoryMap['home-kitchen'],
       stock: 50,
     },
@@ -240,7 +243,8 @@ async function main() {
       description:
         'HEPA air purifier removes 99.97% of airborne particles. Quiet operation and energy efficient.',
       price: 129.99,
-      imageUrl: 'https://images.unsplash.com/photo-1585771724684-38269d6639fd',
+      imageUrl:
+        'https://images.philips.com/is/image/philipsconsumer/vrs_2c1ccbaf43a653b580bc03064ed6ba28140b2da9?wid=700&hei=700&$pnglarge$',
       categoryId: categoryMap['home-kitchen'],
       stock: 40,
     },
