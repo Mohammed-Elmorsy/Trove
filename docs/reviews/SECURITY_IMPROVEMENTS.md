@@ -2,26 +2,57 @@
 
 This document details the security enhancements implemented in the Trove e-commerce application following a comprehensive security assessment.
 
-**Date**: December 5, 2025
+**Date**: December 5, 2025 (Updated: December 6, 2025)
 **Assessment Type**: Comprehensive Security Review
 
 ---
 
 ## Summary of Changes
 
-| Category                   | Severity      | Status |
-| -------------------------- | ------------- | ------ |
-| Dependency Vulnerabilities | Critical/High | Fixed  |
-| Security Headers           | High          | Fixed  |
-| Rate Limiting              | High          | Fixed  |
-| Input Validation           | Medium        | Fixed  |
-| Request Size Limits        | Medium        | Fixed  |
-| XSS Prevention             | Medium        | Fixed  |
-| Database Security          | Low           | Fixed  |
+| Category                     | Severity      | Status |
+| ---------------------------- | ------------- | ------ |
+| CVE-2025-55182 (React2Shell) | Critical      | Fixed  |
+| Dependency Vulnerabilities   | Critical/High | Fixed  |
+| Security Headers             | High          | Fixed  |
+| Rate Limiting                | High          | Fixed  |
+| Input Validation             | Medium        | Fixed  |
+| Request Size Limits          | Medium        | Fixed  |
+| XSS Prevention               | Medium        | Fixed  |
+| Database Security            | Low           | Fixed  |
 
 ---
 
-## 1. Dependency Vulnerabilities Fixed
+## 1. CVE-2025-55182 (React2Shell) - CRITICAL
+
+**Date Fixed**: December 5, 2025
+**Severity**: Critical (CVSS 10.0)
+**Vulnerability**: Remote Code Execution in React Server Components
+
+### Description
+
+A critical vulnerability was discovered in React that allowed remote code execution through maliciously crafted Server Component payloads. This vulnerability, dubbed "React2Shell", was actively exploited in the wild and could allow attackers to execute arbitrary code on servers running affected React versions.
+
+### Resolution
+
+- **React** updated to **19.2.1**
+- **React-DOM** updated to **19.2.1**
+- **Next.js** updated to **16.0.7**
+
+**Files Changed**:
+
+- `frontend/package.json`
+- `frontend/package-lock.json`
+
+### Verification
+
+```bash
+npm list react react-dom next
+# Should show react@19.2.1, react-dom@19.2.1, next@16.0.7
+```
+
+---
+
+## 2. Dependency Vulnerabilities Fixed
 
 ### Frontend
 
@@ -41,7 +72,7 @@ This document details the security enhancements implemented in the Trove e-comme
 
 ---
 
-## 2. Security Headers (Helmet)
+## 3. Security Headers (Helmet)
 
 Implemented comprehensive security headers using Helmet middleware.
 
@@ -77,7 +108,7 @@ app.use(
 
 ---
 
-## 3. Rate Limiting
+## 4. Rate Limiting
 
 Implemented API rate limiting using `@nestjs/throttler` to prevent abuse and DoS attacks.
 
@@ -101,7 +132,7 @@ ThrottlerModule.forRoot([
 
 ---
 
-## 4. Global Validation Pipe
+## 5. Global Validation Pipe
 
 Configured a global validation pipe to ensure all endpoints validate input automatically.
 
@@ -117,7 +148,7 @@ Configured a global validation pipe to ensure all endpoints validate input autom
 
 ---
 
-## 5. Input Validation Enhancements
+## 6. Input Validation Enhancements
 
 ### Create Product DTO
 
@@ -157,7 +188,7 @@ Created dedicated DTO for UUID validation on path parameters.
 
 ---
 
-## 6. Request Size Limits
+## 7. Request Size Limits
 
 Configured request body size limits to prevent large payload attacks.
 
@@ -177,7 +208,7 @@ app.use(urlencoded({ extended: true, limit: '1mb' }));
 
 ---
 
-## 7. XSS Prevention in JSON-LD
+## 8. XSS Prevention in JSON-LD
 
 Added HTML escaping for user-provided data in JSON-LD structured data to prevent XSS attacks.
 
@@ -202,7 +233,7 @@ export function escapeHtmlForJsonLd(text: string | undefined | null): string {
 
 ---
 
-## 8. Docker Security
+## 9. Docker Security
 
 Updated Docker Compose to bind PostgreSQL to localhost only, preventing external access.
 

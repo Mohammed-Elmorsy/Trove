@@ -91,8 +91,12 @@ Code quality reports and improvement documentation.
 
 - **Milestone 1**: ✅ Complete - Project Setup
 - **Milestone 2**: ✅ Complete - Product Catalog
-- **Milestone 3**: 🚧 In Progress - Shopping Cart
+- **Milestone 3**: ⏳ Not Started - Shopping Cart
 - **Code Quality**: Grade A (see [NEXTJS_REVIEW_FIXES.md](./reviews/NEXTJS_REVIEW_FIXES.md))
+
+### Security Notices
+
+- **CVE-2025-55182 (React2Shell)**: ⚠️ Critical - React updated to 19.2.1 to patch remote code execution vulnerability (December 5, 2025)
 
 ---
 
@@ -134,5 +138,5 @@ As the project evolves, please:
 
 ---
 
-**Last Updated**: December 5, 2025
-**Current Milestone**: 3 - Shopping Cart (In Progress)
+**Last Updated**: December 6, 2025
+**Current Milestone**: 2 - Product Catalog (Complete)
