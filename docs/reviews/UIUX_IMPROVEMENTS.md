@@ -125,10 +125,19 @@ This document tracks the UI/UX improvements made to the Trove e-commerce applica
 - Used `CardHeader` and `CardTitle` for section titles
 - Used `CardContent` for filter content
 
-#### Loading Skeleton (`frontend/app/loading.tsx`)
+#### Loading Skeletons (Route-Specific)
 
-- Complete rewrite using Shadcn `Skeleton` component
-- Uses Shadcn `Card` for product skeleton cards
+- **`frontend/app/loading.tsx`** - Global loading skeleton with hero and product grid
+- **`frontend/app/products/loading.tsx`** - Products page skeleton with sidebar filters and product grid
+- **`frontend/app/products/[id]/loading.tsx`** - Product detail skeleton with image and info cards
+- All use Shadcn `Skeleton` and `Card` components for consistency
+
+#### Error Boundaries (Route-Specific)
+
+- **`frontend/app/error.tsx`** - Global error boundary with retry functionality
+- **`frontend/app/products/error.tsx`** - Products list error with retry button
+- **`frontend/app/products/[id]/error.tsx`** - Product detail error with retry and back navigation
+- Consistent design with AlertCircle icon and clear messaging
 
 ---
 
@@ -221,7 +230,8 @@ Uses Shadcn Sheet with right-side sliding:
 - [x] Images load instantly on product details (priority)
 - [x] Smooth hover transition on product images
 - [x] All filter components use Shadcn UI
-- [x] Loading skeletons display correctly
+- [x] Loading skeletons display correctly on all routes
+- [x] Error boundaries show user-friendly messages with retry options
 - [x] Responsive design works on all screen sizes
 
 ---
@@ -257,4 +267,4 @@ Uses Shadcn Sheet with right-side sliding:
 
 ---
 
-Last Updated: December 2, 2025
+Last Updated: December 6, 2025
