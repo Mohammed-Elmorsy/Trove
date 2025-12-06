@@ -5,6 +5,7 @@ import { CategoryFilter } from '@/components/products/category-filter';
 import { PriceFilter } from '@/components/products/price-filter';
 import { Pagination } from '@/components/products/pagination';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { PageBreadcrumb } from '@/components/layout/page-breadcrumb';
 
 interface SearchParams {
   search?: string;
@@ -34,10 +35,23 @@ export default async function ProductsPage({
 
   const [productsData, categories] = await Promise.all([getProducts(query), getCategories()]);
 
+  // Find the selected category for breadcrumb
+  const selectedCategory = params.categoryId
+    ? categories.find((c) => c.id === params.categoryId)
+    : undefined;
+
+  // Build breadcrumb items
+  const breadcrumbItems = selectedCategory
+    ? [{ label: 'Products', href: '/products' }, { label: selectedCategory.name }]
+    : [{ label: 'Products' }];
+
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-8">All Products</h1>
+        <PageBreadcrumb items={breadcrumbItems} />
+        <h1 className="text-4xl font-bold mb-8">
+          {selectedCategory ? selectedCategory.name : 'All Products'}
+        </h1>
 
         {/* Filters Section */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

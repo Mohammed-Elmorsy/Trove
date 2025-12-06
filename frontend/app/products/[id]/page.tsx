@@ -6,8 +6,9 @@ import { escapeHtmlForJsonLd } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowLeft, ShoppingCart } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 import { ProductImage } from '@/components/ui/product-image';
+import { PageBreadcrumb } from '@/components/layout/page-breadcrumb';
 
 export async function generateMetadata({
   params,
@@ -102,13 +103,13 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
       />
       <main className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
-          {/* Back Button */}
-          <Link href="/products">
-            <Button variant="ghost" className="mb-6">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Back to Products
-            </Button>
-          </Link>
+          <PageBreadcrumb
+            items={[
+              { label: 'Products', href: '/products' },
+              { label: product.category.name, href: `/products?categoryId=${product.category.id}` },
+              { label: product.name },
+            ]}
+          />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Product Image */}

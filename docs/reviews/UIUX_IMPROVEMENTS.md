@@ -92,7 +92,51 @@ This document tracks the UI/UX improvements made to the Trove e-commerce applica
 - `frontend/app/loading.tsx`
   - Converted to use Shadcn Skeleton and Card components
 
-### 4. Full Shadcn UI Adoption
+### 4. Breadcrumb Navigation
+
+**Files Created:**
+
+- `frontend/components/layout/page-breadcrumb.tsx`
+
+**Features:**
+
+- Reusable `PageBreadcrumb` component for all pages
+- Home icon link as first item
+- Chevron separators between items
+- Current page displayed as non-clickable text
+- Supports dynamic product names on detail pages
+
+**Shadcn Components Used:**
+
+- `Breadcrumb` - Base component with aria-label
+- `BreadcrumbList` - Semantic ordered list
+- `BreadcrumbItem` - Individual breadcrumb items
+- `BreadcrumbLink` - Clickable links with Next.js Link
+- `BreadcrumbPage` - Current page indicator
+- `BreadcrumbSeparator` - Chevron icon separator
+
+**Files Modified:**
+
+- `frontend/app/products/page.tsx` - Added breadcrumb: Home > Products
+- `frontend/app/products/[id]/page.tsx` - Added breadcrumb: Home > Products > {Category} > {Product Name}
+
+**Usage Examples:**
+
+```tsx
+// Products page
+<PageBreadcrumb items={[{ label: 'Products' }]} />
+
+// Product detail page (with category link)
+<PageBreadcrumb
+  items={[
+    { label: 'Products', href: '/products' },
+    { label: product.category.name, href: `/products?categoryId=${product.category.id}` },
+    { label: product.name },
+  ]}
+/>
+```
+
+### 5. Full Shadcn UI Adoption
 
 **New Components Installed:**
 
@@ -101,6 +145,7 @@ This document tracks the UI/UX improvements made to the Trove e-commerce applica
 - `separator` - For visual dividers
 - `skeleton` - For loading states
 - `label` - For form labels
+- `breadcrumb` - For breadcrumb navigation
 
 **Files Modified:**
 
@@ -148,11 +193,13 @@ This document tracks the UI/UX improvements made to the Trove e-commerce applica
 ```
 frontend/components/
 ├── layout/
-│   └── navbar.tsx          # Shared navigation component
+│   ├── navbar.tsx          # Shared navigation component
+│   └── page-breadcrumb.tsx # Breadcrumb navigation component
 ├── home/
 │   └── home-pagination.tsx # Home page specific pagination
 └── ui/
     ├── product-image.tsx   # Reusable product image component
+    ├── breadcrumb.tsx      # Shadcn Breadcrumb
     ├── navigation-menu.tsx # Shadcn NavigationMenu
     ├── sheet.tsx           # Shadcn Sheet
     ├── separator.tsx       # Shadcn Separator
@@ -233,6 +280,9 @@ Uses Shadcn Sheet with right-side sliding:
 - [x] Loading skeletons display correctly on all routes
 - [x] Error boundaries show user-friendly messages with retry options
 - [x] Responsive design works on all screen sizes
+- [x] Breadcrumb navigation on Products page
+- [x] Breadcrumb navigation on Product detail page with category and product name
+- [x] Category link in breadcrumb filters products by that category
 
 ---
 
@@ -261,9 +311,8 @@ Uses Shadcn Sheet with right-side sliding:
 ## Next Steps
 
 1. Consider adding cart badge counter to navbar
-2. Add breadcrumb navigation on product detail pages
-3. Implement search autocomplete suggestions
-4. Add category icons/images
+2. Implement search autocomplete suggestions
+3. Add category icons/images
 
 ---
 
