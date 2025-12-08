@@ -47,9 +47,9 @@ async function bootstrap() {
     }),
   );
 
-  // Enable CORS for frontend
+  // Enable CORS for frontend and mobile apps
   app.enableCors({
-    origin: appConfig.frontendUrl,
+    origin: appConfig.allowedOrigins,
     credentials: true,
   });
 

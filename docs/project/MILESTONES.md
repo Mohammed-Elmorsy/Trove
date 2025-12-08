@@ -15,7 +15,8 @@
 
 **Recent Achievements**:
 
-- ✅ **Milestone 3 Complete!** Full shopping cart with session-based persistence
+- ✅ **Mobile App Launched!** React Native/Expo app with shared types
+- ✅ **Milestone 3 Complete!** Full shopping cart on web AND mobile
 - ✅ Add to cart with quantity selector and dual feedback (toast + button state)
 - ✅ Cart page with item management (update quantity, remove, clear all)
 - ✅ Cart badge in navbar showing item count
@@ -23,6 +24,7 @@
 - ✅ Stock validation prevents over-ordering
 - ✅ Toast notifications using Sonner
 - ✅ Loading and error states for cart page
+- ✅ Modern ProductCard styling (shadows, rounded images, stock badges)
 
 **UI/UX Improvements (December 2, 2025)**:
 

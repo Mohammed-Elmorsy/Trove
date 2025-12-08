@@ -3,6 +3,8 @@
 ![Next.js](https://img.shields.io/badge/Next.js-16.0.7-black?style=flat&logo=next.js&logoColor=white)
 ![React](https://img.shields.io/badge/React-19.2.1-blue?style=flat&logo=react&logoColor=white)
 ![NestJS](https://img.shields.io/badge/NestJS-11.0.1-E0234E?style=flat&logo=nestjs&logoColor=white)
+![Expo](https://img.shields.io/badge/Expo-54-000020?style=flat&logo=expo&logoColor=white)
+![React Native](https://img.shields.io/badge/React%20Native-0.81-61DAFB?style=flat&logo=react&logoColor=white)
 ![Prisma](https://img.shields.io/badge/Prisma-7.0.1-2D3748?style=flat&logo=prisma&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?style=flat&logo=postgresql&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6?style=flat&logo=typescript&logoColor=white)
@@ -10,21 +12,23 @@
 ![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-FE5196?style=flat&logo=conventionalcommits&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat)
 
-A modern, full-stack e-commerce application built with Next.js, Nest.js, PostgreSQL, and Prisma.
+A modern, full-stack e-commerce application with web and mobile apps, built with Next.js, React Native/Expo, Nest.js, PostgreSQL, and Prisma.
 
 ## Features
 
 ### Implemented
 
 - **Product Catalog** - Browse products with advanced search, category filters, and price range filters
+- **Shopping Cart** - Session-based cart with add, update, remove items and stock validation
+- **Mobile App** - React Native/Expo app for iOS, Android, and web with shared TypeScript types
 - **Category System** - Products organized by categories (Electronics, Clothing, Home & Garden, Sports)
 - **Responsive Design** - Mobile-first UI with responsive grid layouts (1-4 columns)
 - **Smart Pagination** - Page numbers with ellipsis for large datasets
-- **Shared Navigation** - Responsive navbar with mobile slide-out menu
+- **Shared Navigation** - Responsive navbar with mobile slide-out menu and cart badge
+- **Modern UI** - Shadcn UI components, toast notifications, loading skeletons
 
 ### Coming Soon
 
-- **Shopping Cart** - Add, update, and remove items (Milestone 3)
 - **Checkout & Orders** - Complete purchases and track orders (Milestone 4)
 - **Admin Panel** - Manage products and orders (Milestone 5)
 - **User Authentication** - Secure user accounts (Milestone 6)
@@ -33,18 +37,29 @@ A modern, full-stack e-commerce application built with Next.js, Nest.js, Postgre
 
 ### Backend
 
-- **Nest.js** - Progressive Node.js framework
-- **Prisma** - Next-generation ORM
-- **PostgreSQL** - Relational database
+- **Nest.js 11** - Progressive Node.js framework
+- **Prisma 7** - Next-generation ORM with PostgreSQL adapter
+- **PostgreSQL 15** - Relational database
 - **TypeScript** - Type-safe development
 
-### Frontend
+### Web Frontend
 
 - **Next.js 16** - React framework with App Router and Turbopack
 - **React 19** - Latest React with improved performance
 - **Tailwind CSS** - Utility-first CSS framework
 - **Shadcn UI** - Re-usable component library
 - **TypeScript** - Type-safe development
+
+### Mobile App
+
+- **Expo SDK 54** - React Native development platform
+- **React Native 0.81** - Native mobile runtime
+- **Expo Router** - File-based navigation
+- **TypeScript** - Type-safe development
+
+### Shared
+
+- **@trove/shared** - Shared TypeScript types between web and mobile
 
 ### Infrastructure
 
@@ -58,18 +73,27 @@ trove/
 ├── backend/              # Nest.js API
 │   ├── src/
 │   │   ├── prisma/      # Prisma service
-│   │   ├── products/    # Products module (Milestone 2)
-│   │   ├── cart/        # Cart module (Milestone 3)
+│   │   ├── products/    # Products module
+│   │   ├── cart/        # Cart module
 │   │   ├── orders/      # Orders module (Milestone 4)
 │   │   └── auth/        # Auth module (Milestone 6)
 │   └── prisma/
 │       └── schema.prisma
 │
-├── frontend/             # Next.js App
+├── frontend/             # Next.js Web App
 │   ├── app/             # App router pages
 │   ├── components/      # React components
 │   │   └── ui/          # Shadcn UI components
 │   └── lib/             # Utilities
+│
+├── mobile/               # React Native/Expo App
+│   ├── app/             # Expo Router pages
+│   ├── components/      # React Native components
+│   ├── lib/             # API client
+│   └── context/         # Cart state management
+│
+├── shared/               # Shared TypeScript types
+│   └── index.ts         # Product, Cart, Category types
 │
 ├── docs/                # Documentation
 │   ├── project/         # Project overview and planning
@@ -129,10 +153,22 @@ npm run dev
 
 Frontend will run on: `http://localhost:3000`
 
+5. **Setup Mobile App** (optional, in a new terminal)
+
+```bash
+cd mobile
+npm install
+cp .env.example .env
+npm start
+```
+
+Mobile will run on: `http://localhost:8081` (web) or scan QR code with Expo Go app
+
 ### Verify Installation
 
-- Visit `http://localhost:3000` - Frontend should load
+- Visit `http://localhost:3000` - Web frontend should load
 - Visit `http://localhost:4000` - Backend should respond
+- Visit `http://localhost:8081` - Mobile web should load
 - Run `docker ps` - PostgreSQL container should be running
 
 ## Development
@@ -181,9 +217,9 @@ npx prisma migrate reset
 
 ## Project Milestones
 
-- [x] **Milestone 1**: Project Setup & Infrastructure
+- [x] **Milestone 1**: Project Setup & Infrastructure ✅
 - [x] **Milestone 2**: Product Catalog (Full-Stack) ✅
-- [ ] **Milestone 3**: Shopping Cart (Full-Stack)
+- [x] **Milestone 3**: Shopping Cart (Web & Mobile) ✅
 - [ ] **Milestone 4**: Checkout & Orders (Full-Stack)
 - [ ] **Milestone 5**: Admin Panel Basics (Full-Stack)
 - [ ] **Milestone 6**: User Authentication & Authorization (Full-Stack)
@@ -201,6 +237,7 @@ See [docs/project/MILESTONES.md](docs/project/MILESTONES.md) for detailed breakd
 
 - [Architecture](docs/architecture/ARCHITECTURE.md) - System architecture and design
 - [Tech Stack](docs/architecture/TECH_STACK.md) - Technology choices and rationale
+- [Mobile App](docs/architecture/MOBILE_APP.md) - React Native/Expo mobile architecture
 - [Configuration](docs/architecture/CONFIGURATION.md) - Advanced configuration system
 - [Setup Guide](docs/architecture/SETUP.md) - Detailed setup instructions
 
@@ -212,6 +249,7 @@ See [docs/project/MILESTONES.md](docs/project/MILESTONES.md) for detailed breakd
 ### Milestones
 
 - [Milestone 2 Progress](docs/milestones/MILESTONE_2_PROGRESS.md) - Product Catalog completion report
+- [Milestone 3 Progress](docs/milestones/MILESTONE_3_PROGRESS.md) - Shopping Cart completion report
 
 ### Code Reviews
 
@@ -238,12 +276,15 @@ See [docs/project/MILESTONES.md](docs/project/MILESTONES.md) for detailed breakd
 - `minPrice` / `maxPrice` - Filter by price range
 - `page` / `limit` - Pagination (default: page=1, limit=12)
 
-### Cart (Coming in Milestone 3)
+### Cart ✅
 
-- `GET /cart/:sessionId` - Get cart
-- `POST /cart/items` - Add item to cart
-- `PUT /cart/items/:id` - Update item quantity
-- `DELETE /cart/items/:id` - Remove item
+| Method   | Endpoint              | Description           |
+| -------- | --------------------- | --------------------- |
+| `GET`    | `/cart/:sessionId`    | Get cart with items   |
+| `POST`   | `/cart/items`         | Add item to cart      |
+| `PATCH`  | `/cart/items/:itemId` | Update item quantity  |
+| `DELETE` | `/cart/items/:itemId` | Remove item from cart |
+| `DELETE` | `/cart/:sessionId`    | Clear entire cart     |
 
 ### Orders (Coming in Milestone 4)
 
@@ -277,4 +318,4 @@ MIT
 
 ---
 
-**Current Status:** Milestone 2 Complete - Product Catalog fully functional with search, filters, and pagination!
+**Current Status:** Milestone 3 Complete - Shopping Cart fully functional on Web and Mobile!

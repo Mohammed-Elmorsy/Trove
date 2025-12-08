@@ -146,10 +146,45 @@
 - Easy to scale
 - Strong community support
 
+## Mobile App
+
+### Core
+
+- **Expo SDK 54** - React Native development platform
+  - Managed workflow
+  - Over-the-air updates
+  - Cross-platform (iOS, Android, Web)
+- **React Native 0.81.5** - Native runtime
+- **Expo Router 6.0.17** - File-based navigation
+  - Tab navigation
+  - Stack navigation
+  - Deep linking support
+
+### UI & Styling
+
+- **React Native StyleSheet** - Native styling
+- **Platform-specific shadows** - iOS/Android/Web
+- **Themed components** - Dark/light mode support
+- **Custom ProductCard** - Modern e-commerce styling
+
+### State & Storage
+
+- **React Context** - Cart state management
+- **AsyncStorage** - Session persistence
+- **Shared types (@trove/shared)** - TypeScript types shared with web
+
+### Development
+
+- **Expo Go** - Development client for physical devices
+- **dotenv** - Environment variable management
+- **TypeScript** - Full type safety
+
+See [MOBILE_APP.md](./MOBILE_APP.md) for detailed mobile architecture.
+
 ## Future Considerations
 
 - **Payment Processing**: Stripe integration
 - **File Storage**: AWS S3 or Cloudinary
 - **Email**: SendGrid or similar
-- **Deployment**: Vercel (frontend), Railway/Render (backend)
+- **Deployment**: Vercel (frontend), Railway/Render (backend), EAS (mobile)
 - **Monitoring**: Sentry for error tracking

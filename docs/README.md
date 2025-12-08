@@ -47,6 +47,7 @@ System design, technology stack, and setup instructions.
 - **[TECH_STACK.md](./architecture/TECH_STACK.md)** - Technology choices and rationale
 - **[CONFIGURATION.md](./architecture/CONFIGURATION.md)** - Advanced configuration system (NestJS)
 - **[SETUP.md](./architecture/SETUP.md)** - Detailed setup and installation guide
+- **[MOBILE_APP.md](./architecture/MOBILE_APP.md)** - React Native/Expo mobile app architecture
 
 ---
 
@@ -86,6 +87,7 @@ Code quality reports and improvement documentation.
 - **Architecture**: [ARCHITECTURE.md](./architecture/ARCHITECTURE.md)
 - **Tech Stack**: [TECH_STACK.md](./architecture/TECH_STACK.md)
 - **Configuration**: [CONFIGURATION.md](./architecture/CONFIGURATION.md)
+- **Mobile App**: [MOBILE_APP.md](./architecture/MOBILE_APP.md)
 - **Commit Guidelines**: [COMMIT_CONVENTIONS.md](./guides/COMMIT_CONVENTIONS.md)
 
 ### Current Status
@@ -140,5 +142,5 @@ As the project evolves, please:
 
 ---
 
-**Last Updated**: December 6, 2025
-**Current Milestone**: 3 - Shopping Cart (Complete)
+**Last Updated**: December 8, 2025
+**Current Milestone**: 3 - Shopping Cart (Complete on Web & Mobile)

@@ -297,6 +297,16 @@ trove/
 │   ├── package.json
 │   └── .env.local
 │
+├── mobile/               # React Native/Expo App
+│   ├── app/
+│   ├── components/
+│   ├── lib/
+│   ├── package.json
+│   └── .env
+│
+├── shared/               # Shared TypeScript types
+│   └── index.ts
+│
 ├── docs/                 # Documentation
 ├── docker-compose.yml    # Docker services
 └── README.md
@@ -311,6 +321,40 @@ After completing setup:
 3. Check `http://localhost:4000` API responds
 4. Proceed to Milestone 2: Product Catalog
 
+## Mobile App Setup
+
+### 5. Mobile Setup
+
+```bash
+cd mobile
+npm install
+
+# Copy environment variables
+cp .env.example .env
+
+# For physical device testing, update .env with your local IP:
+# API_URL=http://192.168.x.x:4000
+
+# Start Expo development server
+npm start
+```
+
+Mobile will run on:
+
+- Web: `http://localhost:8081`
+- iOS: Expo Go app (scan QR code)
+- Android: Expo Go app (scan QR code)
+
+### Backend CORS for Mobile
+
+When testing on physical devices, add your IP to `backend/.env`:
+
+```env
+ALLOWED_ORIGINS="http://localhost:3000,http://localhost:8081,http://192.168.x.x:8081"
+```
+
+See [MOBILE_APP.md](./MOBILE_APP.md) for detailed mobile setup instructions.
+
 ## Additional Resources
 
 - [Nest.js Documentation](https://docs.nestjs.com/)
@@ -318,3 +362,5 @@ After completing setup:
 - [Prisma Documentation](https://www.prisma.io/docs)
 - [Shadcn UI Documentation](https://ui.shadcn.com/)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Expo Documentation](https://docs.expo.dev/)
+- [React Native Documentation](https://reactnative.dev/docs/getting-started)
