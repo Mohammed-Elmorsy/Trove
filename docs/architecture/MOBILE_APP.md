@@ -24,6 +24,9 @@ mobile/
 │   ├── ThemedText.tsx       # Theme-aware Text
 │   ├── ProductCard.tsx      # Product grid card
 │   ├── CategoryFilter.tsx   # Category filter chips
+│   ├── SearchBar.tsx        # Product search input
+│   ├── PriceFilter.tsx      # Price range filter (modal)
+│   ├── LoadMoreButton.tsx   # Load more products button
 │   ├── LoadingSpinner.tsx   # Loading indicator
 │   └── ErrorMessage.tsx     # Error display with retry
 ├── context/
@@ -303,6 +306,9 @@ For physical devices, configure your machine's IP in the `.env` file:
 - [x] Dark/light mode support
 - [x] Responsive layouts
 - [x] Navigation with back buttons
+- [x] Search bar with real-time input
+- [x] Price range filter (modal with min/max inputs)
+- [x] "Load More" button pattern (mobile-optimized alternative to pagination)
 
 ### Milestone 3 - Shopping Cart
 
@@ -320,11 +326,10 @@ For physical devices, configure your machine's IP in the `.env` file:
 The mobile app will implement upcoming features in parallel with the web frontend:
 
 - **Milestone 4**: Checkout flow with payment integration
-- **Milestone 5**: Search and advanced filtering
-- **Milestone 6**: User authentication and profiles
-- **Milestone 7**: Order history and tracking
-- **Milestone 8**: Push notifications
-- **Milestone 9**: Offline support
+- **Milestone 5**: User authentication and profiles
+- **Milestone 6**: Order history and tracking
+- **Milestone 7**: Push notifications
+- **Milestone 8**: Offline support
 
 ## Best Practices
 

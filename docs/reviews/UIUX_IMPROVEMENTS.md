@@ -308,6 +308,55 @@ Uses Shadcn Sheet with right-side sliding:
 
 ---
 
+## Mobile App Feature Parity (December 8, 2025)
+
+The following features have been added to the React Native/Expo mobile app to match the web frontend:
+
+### New Mobile Components
+
+| Component      | File                                   | Description                                  |
+| -------------- | -------------------------------------- | -------------------------------------------- |
+| SearchBar      | `mobile/components/SearchBar.tsx`      | Text input with search icon and clear button |
+| PriceFilter    | `mobile/components/PriceFilter.tsx`    | Modal-based min/max price range filter       |
+| LoadMoreButton | `mobile/components/LoadMoreButton.tsx` | "Load More" button with progress indicator   |
+
+### Updated Screens
+
+**Products Screen (`mobile/app/(tabs)/index.tsx`)**
+
+- Added search bar at top
+- Added price filter button (opens modal)
+- Added "Load More" button at bottom (mobile-optimized alternative to pagination)
+- Page title shows "All Products" or selected category name
+- Product count display with "Showing X of Y" progress
+
+### Mobile-Specific UI Adaptations
+
+| Web Feature        | Mobile Adaptation                                      |
+| ------------------ | ------------------------------------------------------ |
+| Sidebar filters    | Horizontal chip filters + modal for price              |
+| URL-based state    | Local component state                                  |
+| Hover effects      | Press feedback animations                              |
+| Desktop pagination | "Load More" button (more natural for touch interfaces) |
+| Pull to refresh    | Supported for refreshing product list                  |
+
+### Why "Load More" Instead of Pagination?
+
+Traditional pagination with numbered page buttons is less ergonomic on mobile due to:
+
+- Smaller touch targets on mobile screens
+- Touch-based interaction model favors continuous scrolling
+- Users prefer staying in a continuous flow when browsing
+
+The "Load More" pattern provides:
+
+- Clear user control over loading additional content
+- Progress indication ("Showing X of Y products")
+- Natural fit for the mobile browsing experience
+- Can easily be converted to infinite scroll if preferred (code is prepared)
+
+---
+
 ## Next Steps
 
 1. Consider adding cart badge counter to navbar
@@ -316,4 +365,4 @@ Uses Shadcn Sheet with right-side sliding:
 
 ---
 
-Last Updated: December 6, 2025
+Last Updated: December 8, 2025
