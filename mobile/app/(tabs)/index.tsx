@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { FlatList, StyleSheet, RefreshControl, View } from 'react-native';
+import { FlatList, StyleSheet, RefreshControl, View, ActivityIndicator } from 'react-native';
 import { Product, Category } from '@trove/shared';
 import { getProducts, getCategories } from '@/lib/api';
 import { ThemedView } from '@/components/ThemedView';
@@ -31,6 +31,7 @@ export default function ProductsScreen() {
 
   // Loading state
   const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isFilterLoading, setIsFilterLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -38,6 +39,7 @@ export default function ProductsScreen() {
 
   // Track if filters changed to reset products
   const filtersRef = useRef({ selectedCategoryId, search, minPrice, maxPrice });
+  const isFirstLoad = useRef(true);
 
   const tintColor = useThemeColor({}, 'tint');
 
@@ -82,6 +84,7 @@ export default function ProductsScreen() {
         setError(err instanceof Error ? err.message : 'Failed to load products');
       } finally {
         setIsInitialLoading(false);
+        setIsFilterLoading(false);
         setIsLoadingMore(false);
         setIsRefreshing(false);
       }
@@ -104,15 +107,21 @@ export default function ProductsScreen() {
 
     if (filtersChanged) {
       filtersRef.current = { selectedCategoryId, search, minPrice, maxPrice };
-      setIsInitialLoading(true);
-      setProducts([]);
+      // Only show full-screen loading on first load, use inline loading for filter changes
+      if (isFirstLoad.current) {
+        setIsInitialLoading(true);
+      } else {
+        setIsFilterLoading(true);
+      }
       loadProducts(1, false);
     }
   }, [selectedCategoryId, search, minPrice, maxPrice, loadProducts]);
 
   // Initial load
   useEffect(() => {
-    loadProducts(1, false);
+    loadProducts(1, false).then(() => {
+      isFirstLoad.current = false;
+    });
   }, []);
 
   const handleCategoryChange = (categoryId: string | null) => {
@@ -137,14 +146,12 @@ export default function ProductsScreen() {
 
   const handleRefresh = () => {
     setIsRefreshing(true);
-    setProducts([]);
     loadProducts(1, false);
     loadCategories();
   };
 
   const handleRetry = () => {
     setIsInitialLoading(true);
-    setProducts([]);
     loadProducts(1, false);
   };
 
@@ -159,6 +166,7 @@ export default function ProductsScreen() {
     return 'All Products';
   };
 
+  // Only show full-screen loading on initial app load
   if (isInitialLoading && !isRefreshing) {
     return <LoadingSpinner fullScreen />;
   }
@@ -171,9 +179,14 @@ export default function ProductsScreen() {
     <View style={styles.headerContainer}>
       {/* Page Title */}
       <View style={styles.titleContainer}>
-        <ThemedText type="title" style={styles.title}>
-          {getPageTitle()}
-        </ThemedText>
+        <View style={styles.titleRow}>
+          <ThemedText type="title" style={styles.title}>
+            {getPageTitle()}
+          </ThemedText>
+          {isFilterLoading && (
+            <ActivityIndicator size="small" color={tintColor} style={styles.filterLoader} />
+          )}
+        </View>
         <ThemedText type="secondary" style={styles.productCount}>
           {totalProducts} {totalProducts === 1 ? 'product' : 'products'}
         </ThemedText>
@@ -209,14 +222,30 @@ export default function ProductsScreen() {
     />
   );
 
+  const ListEmptyComponent = () => {
+    // Show loading spinner while filtering
+    if (isFilterLoading) {
+      return (
+        <View style={styles.filterLoadingContainer}>
+          <ActivityIndicator size="large" color={tintColor} />
+        </View>
+      );
+    }
+    return (
+      <View style={styles.emptyContainer}>
+        <ErrorMessage message="No products found" />
+      </View>
+    );
+  };
+
   return (
     <ThemedView style={styles.container}>
       <FlatList
-        data={products}
+        data={isFilterLoading ? [] : products}
         keyExtractor={(item) => item.id}
         numColumns={2}
         contentContainerStyle={styles.listContent}
-        columnWrapperStyle={styles.row}
+        columnWrapperStyle={products.length > 0 && !isFilterLoading ? styles.row : undefined}
         renderItem={({ item }) => (
           <View style={styles.cardWrapper}>
             <ProductCard product={item} />
@@ -230,19 +259,8 @@ export default function ProductsScreen() {
           />
         }
         ListHeaderComponent={ListHeaderComponent}
-        ListFooterComponent={ListFooterComponent}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <ErrorMessage message="No products found" />
-          </View>
-        }
-        // Optional: Enable automatic load more on scroll near end
-        onEndReached={() => {
-          // Uncomment below for infinite scroll behavior
-          // if (!isLoadingMore && hasMore) {
-          //   handleLoadMore();
-          // }
-        }}
+        ListFooterComponent={!isFilterLoading ? ListFooterComponent : null}
+        ListEmptyComponent={ListEmptyComponent}
         onEndReachedThreshold={0.5}
       />
     </ThemedView>
@@ -260,8 +278,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   title: {
     fontSize: 28,
+    marginBottom: 4,
+  },
+  filterLoader: {
+    marginLeft: 12,
     marginBottom: 4,
   },
   productCount: {
@@ -293,5 +319,10 @@ const styles = StyleSheet.create({
   emptyContainer: {
     flex: 1,
     paddingTop: 50,
+  },
+  filterLoadingContainer: {
+    flex: 1,
+    paddingTop: 100,
+    alignItems: 'center',
   },
 });
