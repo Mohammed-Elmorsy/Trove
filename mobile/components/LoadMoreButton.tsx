@@ -19,8 +19,6 @@ export function LoadMoreButton({
   totalCount,
 }: LoadMoreButtonProps) {
   const tintColor = useThemeColor({}, 'tint');
-  const borderColor = useThemeColor({}, 'border');
-  const secondaryTextColor = useThemeColor({}, 'textSecondary');
 
   if (!hasMore) {
     if (currentCount > 0) {
