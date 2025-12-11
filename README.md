@@ -20,6 +20,7 @@ A modern, full-stack e-commerce application with web and mobile apps, built with
 
 - **Product Catalog** - Browse products with advanced search, category filters, and price range filters
 - **Shopping Cart** - Session-based cart with add, update, remove items and stock validation
+- **Checkout & Orders** - Complete checkout flow with shipping form, order confirmation, and order lookup
 - **Mobile App** - React Native/Expo app for iOS, Android, and web with shared TypeScript types
 - **Category System** - Products organized by categories (Electronics, Clothing, Home & Garden, Sports)
 - **Responsive Design** - Mobile-first UI with responsive grid layouts (1-4 columns)
@@ -29,7 +30,6 @@ A modern, full-stack e-commerce application with web and mobile apps, built with
 
 ### Coming Soon
 
-- **Checkout & Orders** - Complete purchases and track orders (Milestone 4)
 - **Admin Panel** - Manage products and orders (Milestone 5)
 - **User Authentication** - Secure user accounts (Milestone 6)
 
@@ -220,7 +220,7 @@ npx prisma migrate reset
 - [x] **Milestone 1**: Project Setup & Infrastructure ✅
 - [x] **Milestone 2**: Product Catalog (Full-Stack) ✅
 - [x] **Milestone 3**: Shopping Cart (Web & Mobile) ✅
-- [ ] **Milestone 4**: Checkout & Orders (Full-Stack)
+- [x] **Milestone 4**: Checkout & Orders (Full-Stack) ✅
 - [ ] **Milestone 5**: Admin Panel Basics (Full-Stack)
 - [ ] **Milestone 6**: User Authentication & Authorization (Full-Stack)
 
@@ -250,6 +250,7 @@ See [docs/project/MILESTONES.md](docs/project/MILESTONES.md) for detailed breakd
 
 - [Milestone 2 Progress](docs/milestones/MILESTONE_2_PROGRESS.md) - Product Catalog completion report
 - [Milestone 3 Progress](docs/milestones/MILESTONE_3_PROGRESS.md) - Shopping Cart completion report
+- [Milestone 4 Progress](docs/milestones/MILESTONE_4_PROGRESS.md) - Checkout & Orders completion report
 
 ### Code Reviews
 
@@ -286,10 +287,14 @@ See [docs/project/MILESTONES.md](docs/project/MILESTONES.md) for detailed breakd
 | `DELETE` | `/cart/items/:itemId` | Remove item from cart |
 | `DELETE` | `/cart/:sessionId`    | Clear entire cart     |
 
-### Orders (Coming in Milestone 4)
+### Orders ✅
 
-- `POST /orders` - Create order
-- `GET /orders/:id` - Get order details
+| Method  | Endpoint             | Description            |
+| ------- | -------------------- | ---------------------- |
+| `POST`  | `/orders`            | Create order from cart |
+| `GET`   | `/orders/:id`        | Get order by ID        |
+| `GET`   | `/orders`            | Get orders by email    |
+| `PATCH` | `/orders/:id/status` | Update order status    |
 
 ## Contributing
 
@@ -318,4 +323,4 @@ MIT
 
 ---
 
-**Current Status:** Milestone 3 Complete - Shopping Cart fully functional on Web and Mobile!
+**Current Status:** Milestone 4 Complete - Checkout & Orders fully functional on Web and Mobile!
