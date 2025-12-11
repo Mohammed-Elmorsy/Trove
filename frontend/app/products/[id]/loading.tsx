@@ -5,8 +5,8 @@ export default function ProductDetailLoading() {
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
-        {/* Back Button Skeleton */}
-        <Skeleton className="h-10 w-40 mb-6" />
+        {/* Breadcrumb Skeleton */}
+        <Skeleton className="h-5 w-64 mb-6" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {/* Product Image Skeleton */}

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -47,13 +48,10 @@ export function CartSummary({ subtotal, itemCount }: CartSummaryProps) {
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full" size="lg" disabled>
-          Proceed to Checkout
+        <Button className="w-full" size="lg" asChild>
+          <Link href="/checkout">Proceed to Checkout</Link>
         </Button>
       </CardFooter>
-      <p className="text-xs text-center text-muted-foreground pb-4">
-        Checkout coming in Milestone 4
-      </p>
     </Card>
   );
 }

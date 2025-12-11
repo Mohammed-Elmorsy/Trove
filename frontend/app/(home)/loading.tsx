@@ -1,7 +1,7 @@
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 
-export default function Loading() {
+export default function HomeLoading() {
   return (
     <main className="min-h-screen">
       {/* Hero Skeleton */}

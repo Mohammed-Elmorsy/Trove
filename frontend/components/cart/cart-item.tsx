@@ -27,7 +27,7 @@ export function CartItem({ item }: CartItemProps) {
     setIsUpdating(true);
     try {
       await updateQuantity(item.id, item.quantity - 1);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to update quantity');
     } finally {
       setIsUpdating(false);
@@ -40,7 +40,7 @@ export function CartItem({ item }: CartItemProps) {
     setIsUpdating(true);
     try {
       await updateQuantity(item.id, item.quantity + 1);
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to update quantity');
     } finally {
       setIsUpdating(false);
@@ -54,7 +54,7 @@ export function CartItem({ item }: CartItemProps) {
     try {
       await removeItem(item.id);
       toast.success('Item removed from cart');
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to remove item');
       setIsRemoving(false);
     }
@@ -112,11 +112,7 @@ export function CartItem({ item }: CartItemProps) {
               disabled={item.quantity <= 1 || isUpdating}
               className="h-8 w-8"
             >
-              {isUpdating ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Minus className="h-4 w-4" />
-              )}
+              <Minus className="h-4 w-4" />
               <span className="sr-only">Decrease quantity</span>
             </Button>
             <span className="w-8 text-center font-medium">{item.quantity}</span>
@@ -127,11 +123,7 @@ export function CartItem({ item }: CartItemProps) {
               disabled={item.quantity >= maxQuantity || isUpdating}
               className="h-8 w-8"
             >
-              {isUpdating ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Plus className="h-4 w-4" />
-              )}
+              <Plus className="h-4 w-4" />
               <span className="sr-only">Increase quantity</span>
             </Button>
           </div>

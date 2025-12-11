@@ -6,19 +6,13 @@ import { useState } from 'react';
 import { Menu, Store, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle } from '@/components/ui/sheet';
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  navigationMenuTriggerStyle,
-} from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
 import { CartBadge } from './cart-badge';
 
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/products', label: 'Products' },
+  { href: '/orders', label: 'Orders' },
 ];
 
 export function Navbar() {
@@ -36,25 +30,22 @@ export function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <NavigationMenu className="hidden md:flex">
-            <NavigationMenuList>
-              {navLinks.map((link) => (
-                <NavigationMenuItem key={link.href}>
-                  <NavigationMenuLink asChild>
-                    <Link
-                      href={link.href}
-                      className={cn(
-                        navigationMenuTriggerStyle(),
-                        pathname === link.href && 'bg-accent text-accent-foreground'
-                      )}
-                    >
-                      {link.label}
-                    </Link>
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              ))}
-            </NavigationMenuList>
-          </NavigationMenu>
+          <nav className="hidden md:flex items-center gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={cn(
+                  'inline-flex h-9 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground',
+                  pathname === link.href
+                    ? 'bg-gray-200 text-foreground font-semibold'
+                    : 'bg-background text-foreground'
+                )}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </nav>
 
           {/* Right Section */}
           <div className="flex items-center gap-4">
@@ -85,7 +76,8 @@ export function Navbar() {
                           href={link.href}
                           className={cn(
                             'flex items-center rounded-md px-4 py-3 text-lg font-medium transition-colors hover:bg-accent hover:text-accent-foreground',
-                            pathname === link.href && 'bg-accent text-accent-foreground'
+                            pathname === link.href &&
+                              'bg-gray-200 text-accent-foreground font-semibold'
                           )}
                         >
                           {link.label}

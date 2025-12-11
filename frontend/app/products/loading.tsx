@@ -5,6 +5,10 @@ export default function ProductsLoading() {
   return (
     <main className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-4 py-8">
+        {/* Breadcrumb skeleton */}
+        <Skeleton className="h-5 w-32 mb-6" />
+
+        {/* Title skeleton */}
         <Skeleton className="h-10 w-48 mb-8" />
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

@@ -68,7 +68,7 @@ export default function RootLayout({
         <CartProvider>
           <Navbar />
           {children}
-          <Toaster position="bottom-right" richColors />
+          <Toaster position="bottom-left" richColors />
         </CartProvider>
       </body>
     </html>

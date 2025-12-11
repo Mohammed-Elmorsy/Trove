@@ -11,6 +11,7 @@ interface CartContextType {
   cart: Cart | null;
   isLoading: boolean;
   error: string | null;
+  sessionId: string;
   addItem: (productId: string, quantity: number) => Promise<CartItem | null>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
   removeItem: (itemId: string) => Promise<void>;
@@ -169,6 +170,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         cart,
         isLoading,
         error,
+        sessionId,
         addItem,
         updateQuantity,
         removeItem,
