@@ -36,6 +36,7 @@ model Product {
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
   cartItems   CartItem[]
+  orderItems  OrderItem[]
 
   @@index([name])
   @@index([categoryId])
@@ -71,5 +72,55 @@ model CartItem {
   @@map("cart_items")
 }
 
-// Order Model (Milestone 4) - Will be added later
+// Order Model (Milestone 4)
+model Order {
+  id              String      @id @default(uuid())
+  orderNumber     String      @unique
+  sessionId       String
+  status          String      @default("pending") // pending, confirmed, processing, shipped, delivered, cancelled
+
+  // Shipping Address
+  shippingName    String
+  shippingEmail   String
+  shippingPhone   String
+  shippingAddress String
+  shippingCity    String
+  shippingState   String
+  shippingZipCode String
+  shippingCountry String      @default("USA")
+
+  // Totals (stored as snapshot at order time)
+  subtotal        Decimal     @db.Decimal(10, 2)
+  shippingCost    Decimal     @db.Decimal(10, 2)
+  total           Decimal     @db.Decimal(10, 2)
+
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  items           OrderItem[]
+
+  @@index([sessionId])
+  @@index([shippingEmail])
+  @@index([orderNumber])
+  @@index([status])
+  @@map("orders")
+}
+
+// OrderItem Model (Milestone 4)
+model OrderItem {
+  id           String   @id @default(uuid())
+  orderId      String
+  productId    String
+  productName  String   // Snapshot of product name at order time
+  productPrice Decimal  @db.Decimal(10, 2) // Snapshot of price at order time
+  quantity     Int
+  subtotal     Decimal  @db.Decimal(10, 2) // quantity * productPrice
+  createdAt    DateTime @default(now())
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product      Product  @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
 // User Model (Milestone 6) - Will be added later

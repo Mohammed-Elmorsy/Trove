@@ -51,7 +51,10 @@ export class CartService {
         id: item.id,
         productId: item.productId,
         quantity: item.quantity,
-        product: item.product,
+        product: {
+          ...item.product,
+          price: Number(item.product.price),
+        },
       })),
       itemCount,
       subtotal: Math.round(subtotal * 100) / 100,
@@ -131,7 +134,10 @@ export class CartService {
       id: cartItem.id,
       productId: cartItem.productId,
       quantity: cartItem.quantity,
-      product: cartItem.product,
+      product: {
+        ...cartItem.product,
+        price: Number(cartItem.product.price),
+      },
     };
   }
 
@@ -170,7 +176,10 @@ export class CartService {
       id: updatedItem.id,
       productId: updatedItem.productId,
       quantity: updatedItem.quantity,
-      product: updatedItem.product,
+      product: {
+        ...updatedItem.product,
+        price: Number(updatedItem.product.price),
+      },
     };
   }
 
