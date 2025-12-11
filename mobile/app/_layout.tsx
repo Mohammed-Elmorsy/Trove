@@ -9,6 +9,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { CartProvider } from '@/context/CartContext';
+import { Colors } from '@/constants/Colors';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -43,14 +44,16 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const backgroundColor = Colors[colorScheme ?? 'light'].background;
 
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider style={{ backgroundColor }}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <CartProvider>
           <Stack
             screenOptions={{
-              contentStyle: { backgroundColor: 'transparent' },
+              contentStyle: { backgroundColor },
+              headerStyle: { backgroundColor },
             }}
           >
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

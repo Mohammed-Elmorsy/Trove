@@ -29,20 +29,22 @@ function CartTabBarIcon({ color }: { color: string }) {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const backgroundColor = Colors[colorScheme ?? 'light'].background;
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
-        tabBarInactiveTintColor: Colors[colorScheme].tabIconDefault,
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarInactiveTintColor: Colors[colorScheme ?? 'light'].tabIconDefault,
         tabBarStyle: {
-          backgroundColor: Colors[colorScheme].background,
-          borderTopColor: Colors[colorScheme].border,
+          backgroundColor,
+          borderTopColor: Colors[colorScheme ?? 'light'].border,
         },
         headerStyle: {
-          backgroundColor: Colors[colorScheme].background,
+          backgroundColor,
         },
-        headerTintColor: Colors[colorScheme].text,
+        headerTintColor: Colors[colorScheme ?? 'light'].text,
+        sceneStyle: { backgroundColor },
       }}
     >
       <Tabs.Screen

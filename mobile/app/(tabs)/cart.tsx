@@ -172,7 +172,8 @@ function CartSummary() {
 export default function CartScreen() {
   const { cart, isLoading } = useCart();
 
-  if (isLoading) {
+  // Only show full-screen loading on initial load (no cart data yet)
+  if (isLoading && !cart) {
     return <LoadingSpinner fullScreen />;
   }
 
