@@ -22,7 +22,7 @@ A modern, full-stack e-commerce application with web and mobile apps, built with
 - **Shopping Cart** - Session-based cart with add, update, remove items and stock validation
 - **Checkout & Orders** - Complete checkout flow with shipping form, order confirmation, and order lookup
 - **Mobile App** - React Native/Expo app for iOS, Android, and web with shared TypeScript types
-- **Category System** - Products organized by categories (Electronics, Clothing, Home & Garden, Sports)
+- **Category System** - Products organized by categories (Electronics, Fashion, Home & Kitchen, Sports)
 - **Responsive Design** - Mobile-first UI with responsive grid layouts (1-4 columns)
 - **Smart Pagination** - Page numbers with ellipsis for large datasets
 - **Shared Navigation** - Responsive navbar with mobile slide-out menu and cart badge
