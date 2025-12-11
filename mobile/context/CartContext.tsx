@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
-import { Cart, CartItem } from '@trove/shared';
+import { Cart } from '@trove/shared';
 import { useSession } from '@/hooks/useSession';
 import * as api from '@/lib/api';
 
@@ -7,6 +7,7 @@ interface CartContextType {
   cart: Cart | null;
   isLoading: boolean;
   error: string | null;
+  sessionId: string | null;
   addToCart: (productId: string, quantity?: number) => Promise<void>;
   updateQuantity: (itemId: string, quantity: number) => Promise<void>;
   removeItem: (itemId: string) => Promise<void>;
@@ -134,6 +135,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         cart,
         isLoading: isLoading || sessionLoading,
         error,
+        sessionId,
         addToCart,
         updateQuantity,
         removeItem,

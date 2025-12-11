@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { ScrollView, StyleSheet, View, Image, Pressable, Alert, Dimensions } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Product } from '@trove/shared';
 import { getProduct } from '@/lib/api';
 import { ThemedView } from '@/components/ThemedView';
@@ -23,7 +22,6 @@ export default function ProductDetailScreen() {
   const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   const { addToCart } = useCart();
-  const insets = useSafeAreaInsets();
   const tintColor = useThemeColor({}, 'tint');
   const borderColor = useThemeColor({}, 'border');
   const cardBackground = useThemeColor({}, 'card');
@@ -168,7 +166,6 @@ export default function ProductDetailScreen() {
             {
               backgroundColor: cardBackground,
               borderTopColor: borderColor,
-              paddingBottom: Math.max(insets.bottom, 16) + 16,
             },
           ]}
         >

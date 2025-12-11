@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, StyleSheet, View, Pressable, Image, Alert } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
@@ -25,7 +25,7 @@ function CartItemCard({ item }: { item: CartItem }) {
   const handleIncrement = async () => {
     try {
       await updateQuantity(item.id, item.quantity + 1);
-    } catch (error) {
+    } catch (_error) {
       Alert.alert('Error', 'Failed to update quantity');
     }
   };
@@ -37,7 +37,7 @@ function CartItemCard({ item }: { item: CartItem }) {
     }
     try {
       await updateQuantity(item.id, item.quantity - 1);
-    } catch (error) {
+    } catch (_error) {
       Alert.alert('Error', 'Failed to update quantity');
     }
   };
@@ -51,7 +51,7 @@ function CartItemCard({ item }: { item: CartItem }) {
         onPress: async () => {
           try {
             await removeItem(item.id);
-          } catch (error) {
+          } catch (_error) {
             Alert.alert('Error', 'Failed to remove item');
           }
         },
@@ -125,6 +125,7 @@ function EmptyCart() {
 }
 
 function CartSummary() {
+  const router = useRouter();
   const { cart } = useCart();
   const tintColor = useThemeColor({}, 'tint');
   const borderColor = useThemeColor({}, 'border');
@@ -138,6 +139,10 @@ function CartSummary() {
   };
 
   if (!cart || cart.items.length === 0) return null;
+
+  const handleCheckout = () => {
+    router.push('/checkout' as never);
+  };
 
   return (
     <View
@@ -154,7 +159,10 @@ function CartSummary() {
           {formatPrice(cart.subtotal)}
         </ThemedText>
       </View>
-      <Pressable style={[styles.checkoutButton, { backgroundColor: tintColor }]}>
+      <Pressable
+        style={[styles.checkoutButton, { backgroundColor: tintColor }]}
+        onPress={handleCheckout}
+      >
         <ThemedText style={styles.checkoutButtonText}>Proceed to Checkout</ThemedText>
       </Pressable>
     </View>
@@ -162,7 +170,7 @@ function CartSummary() {
 }
 
 export default function CartScreen() {
-  const { cart, isLoading, error } = useCart();
+  const { cart, isLoading } = useCart();
 
   if (isLoading) {
     return <LoadingSpinner fullScreen />;
