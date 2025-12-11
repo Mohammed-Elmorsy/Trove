@@ -14,10 +14,14 @@ mobile/
 │   ├── (tabs)/              # Tab navigation group
 │   │   ├── _layout.tsx      # Tab layout configuration
 │   │   ├── index.tsx        # Products screen (Home)
+│   │   ├── orders.tsx       # Orders lookup screen
 │   │   └── cart.tsx         # Cart screen
 │   ├── product/
 │   │   └── [id].tsx         # Product detail screen (dynamic route)
-│   ├── _layout.tsx          # Root layout with providers
+│   ├── order/
+│   │   └── [id].tsx         # Order confirmation/detail screen
+│   ├── checkout.tsx         # Checkout screen
+│   ├── _layout.tsx          # Root layout with SafeAreaView wrapper
 │   └── +not-found.tsx       # 404 screen
 ├── components/              # Reusable UI components
 │   ├── ThemedView.tsx       # Theme-aware View
@@ -122,18 +126,28 @@ The app uses Expo Router with file-based routing:
 
 ```
 /              → (tabs)/index.tsx     (Products screen)
+/orders        → (tabs)/orders.tsx    (Orders lookup screen)
 /cart          → (tabs)/cart.tsx      (Cart screen)
 /product/[id]  → product/[id].tsx     (Product detail)
+/checkout      → checkout.tsx         (Checkout screen)
+/order/[id]    → order/[id].tsx       (Order confirmation)
 ```
 
 ### Tab Navigation
 
 - **Products Tab**: Grid view of products with category filtering
+- **Orders Tab**: Order lookup by email address
 - **Cart Tab**: Shopping cart with item management and summary
 
 ### Stack Navigation
 
 - Product detail pages are pushed onto the stack from the Products tab
+- Checkout screen is pushed from the Cart tab
+- Order confirmation is shown after successful checkout
+
+### Safe Area Handling
+
+The root layout wraps the entire app with `SafeAreaView` (edges: bottom) to ensure all screens properly respect device safe areas (home indicator, navigation gestures). This is applied at the layout level rather than per-screen for consistency.
 
 ## State Management
 
@@ -321,15 +335,23 @@ For physical devices, configure your machine's IP in the `.env` file:
 - [x] Empty cart state with CTA
 - [x] Session-based cart (AsyncStorage)
 
+### Milestone 4 - Checkout & Orders
+
+- [x] Checkout screen with shipping form
+- [x] Form validation with error messages
+- [x] Order summary with subtotal/shipping/total
+- [x] Order confirmation screen
+- [x] Orders tab with email lookup
+- [x] Order detail view with status badge
+- [x] Safe area handling for bottom buttons
+
 ## Future Milestones
 
 The mobile app will implement upcoming features in parallel with the web frontend:
 
-- **Milestone 4**: Checkout flow with payment integration
 - **Milestone 5**: User authentication and profiles
-- **Milestone 6**: Order history and tracking
-- **Milestone 7**: Push notifications
-- **Milestone 8**: Offline support
+- **Milestone 6**: Push notifications
+- **Milestone 7**: Offline support
 
 ## Best Practices
 
@@ -356,6 +378,6 @@ The mobile app will implement upcoming features in parallel with the web fronten
 
 ---
 
-**Last Updated**: December 8, 2025
+**Last Updated**: December 11, 2025
 **Expo SDK Version**: 54
 **React Native Version**: 0.81.5
