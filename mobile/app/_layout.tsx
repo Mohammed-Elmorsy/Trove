@@ -5,11 +5,10 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { CartProvider } from '@/context/CartContext';
-import { Colors } from '@/constants/Colors';
 
 export { ErrorBoundary } from 'expo-router';
 
@@ -44,38 +43,39 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-  const backgroundColor = Colors[colorScheme].background;
 
   return (
     <SafeAreaProvider>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <CartProvider>
-          <SafeAreaView style={{ flex: 1, backgroundColor }} edges={['bottom']}>
-            <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="product/[id]"
-                options={{
-                  title: 'Product Details',
-                  headerBackTitle: 'Back',
-                }}
-              />
-              <Stack.Screen
-                name="checkout"
-                options={{
-                  title: 'Checkout',
-                  headerBackTitle: 'Cart',
-                }}
-              />
-              <Stack.Screen
-                name="order/[id]"
-                options={{
-                  title: 'Order Confirmation',
-                  headerBackVisible: false,
-                }}
-              />
-            </Stack>
-          </SafeAreaView>
+          <Stack
+            screenOptions={{
+              contentStyle: { backgroundColor: 'transparent' },
+            }}
+          >
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="product/[id]"
+              options={{
+                title: 'Product Details',
+                headerBackTitle: 'Back',
+              }}
+            />
+            <Stack.Screen
+              name="checkout"
+              options={{
+                title: 'Checkout',
+                headerBackTitle: 'Cart',
+              }}
+            />
+            <Stack.Screen
+              name="order/[id]"
+              options={{
+                title: 'Order Confirmation',
+                headerBackVisible: false,
+              }}
+            />
+          </Stack>
         </CartProvider>
       </ThemeProvider>
     </SafeAreaProvider>

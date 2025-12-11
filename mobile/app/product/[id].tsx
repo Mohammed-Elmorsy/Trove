@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { ScrollView, StyleSheet, View, Image, Pressable, Alert, Dimensions } from 'react-native';
 import { useLocalSearchParams, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Product } from '@trove/shared';
 import { getProduct } from '@/lib/api';
 import { ThemedView } from '@/components/ThemedView';
@@ -15,6 +16,7 @@ const { width } = Dimensions.get('window');
 
 export default function ProductDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const insets = useSafeAreaInsets();
   const [product, setProduct] = useState<Product | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -166,6 +168,7 @@ export default function ProductDetailScreen() {
             {
               backgroundColor: cardBackground,
               borderTopColor: borderColor,
+              paddingBottom: Math.max(insets.bottom, 16),
             },
           ]}
         >

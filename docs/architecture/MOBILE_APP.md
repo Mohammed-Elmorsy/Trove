@@ -147,7 +147,7 @@ The app uses Expo Router with file-based routing:
 
 ### Safe Area Handling
 
-The root layout wraps the entire app with `SafeAreaView` (edges: bottom) to ensure all screens properly respect device safe areas (home indicator, navigation gestures). This is applied at the layout level rather than per-screen for consistency.
+Safe areas are handled per-screen for screens with fixed bottom footers (checkout, product detail). The Tab navigator handles its own safe area for the tab bar. Screens that need safe area padding use `useSafeAreaInsets()` and apply `paddingBottom: Math.max(insets.bottom, 16)` to their footer containers.
 
 ## State Management
 

@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ThemedView } from '@/components/ThemedView';
 import { ThemedText } from '@/components/ThemedText';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
@@ -42,6 +43,7 @@ interface FormErrors {
 
 export default function CheckoutScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { cart, sessionId, refreshCart, isLoading: cartLoading } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
@@ -348,7 +350,14 @@ export default function CheckoutScreen() {
 
         {/* Place Order Button */}
         <View
-          style={[styles.footer, { backgroundColor: cardBackground, borderTopColor: borderColor }]}
+          style={[
+            styles.footer,
+            {
+              backgroundColor: cardBackground,
+              borderTopColor: borderColor,
+              paddingBottom: Math.max(insets.bottom, 16),
+            },
+          ]}
         >
           <Pressable
             style={[

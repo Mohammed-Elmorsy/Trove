@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { FlatList, StyleSheet, RefreshControl, View, ActivityIndicator } from 'react-native';
+import { FlatList, StyleSheet, RefreshControl, View } from 'react-native';
 import { Product, Category } from '@trove/shared';
 import { getProducts, getCategories } from '@/lib/api';
 import { ThemedView } from '@/components/ThemedView';
@@ -31,7 +31,6 @@ export default function ProductsScreen() {
 
   // Loading state
   const [isInitialLoading, setIsInitialLoading] = useState(true);
-  const [isFilterLoading, setIsFilterLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
@@ -84,7 +83,6 @@ export default function ProductsScreen() {
         setError(err instanceof Error ? err.message : 'Failed to load products');
       } finally {
         setIsInitialLoading(false);
-        setIsFilterLoading(false);
         setIsLoadingMore(false);
         setIsRefreshing(false);
       }
@@ -107,11 +105,9 @@ export default function ProductsScreen() {
 
     if (filtersChanged) {
       filtersRef.current = { selectedCategoryId, search, minPrice, maxPrice };
-      // Only show full-screen loading on first load, use inline loading for filter changes
+      // Only show full-screen loading on first load
       if (isFirstLoad.current) {
         setIsInitialLoading(true);
-      } else {
-        setIsFilterLoading(true);
       }
       loadProducts(1, false);
     }
@@ -179,14 +175,9 @@ export default function ProductsScreen() {
     <View style={styles.headerContainer}>
       {/* Page Title */}
       <View style={styles.titleContainer}>
-        <View style={styles.titleRow}>
-          <ThemedText type="title" style={styles.title}>
-            {getPageTitle()}
-          </ThemedText>
-          {isFilterLoading && (
-            <ActivityIndicator size="small" color={tintColor} style={styles.filterLoader} />
-          )}
-        </View>
+        <ThemedText type="title" style={styles.title}>
+          {getPageTitle()}
+        </ThemedText>
         <ThemedText type="secondary" style={styles.productCount}>
           {totalProducts} {totalProducts === 1 ? 'product' : 'products'}
         </ThemedText>
@@ -222,30 +213,20 @@ export default function ProductsScreen() {
     />
   );
 
-  const ListEmptyComponent = () => {
-    // Show loading spinner while filtering
-    if (isFilterLoading) {
-      return (
-        <View style={styles.filterLoadingContainer}>
-          <ActivityIndicator size="large" color={tintColor} />
-        </View>
-      );
-    }
-    return (
-      <View style={styles.emptyContainer}>
-        <ErrorMessage message="No products found" />
-      </View>
-    );
-  };
+  const ListEmptyComponent = () => (
+    <View style={styles.emptyContainer}>
+      <ErrorMessage message="No products found" />
+    </View>
+  );
 
   return (
     <ThemedView style={styles.container}>
       <FlatList
-        data={isFilterLoading ? [] : products}
+        data={products}
         keyExtractor={(item) => item.id}
         numColumns={2}
         contentContainerStyle={styles.listContent}
-        columnWrapperStyle={products.length > 0 && !isFilterLoading ? styles.row : undefined}
+        columnWrapperStyle={products.length > 0 ? styles.row : undefined}
         renderItem={({ item }) => (
           <View style={styles.cardWrapper}>
             <ProductCard product={item} />
@@ -259,7 +240,7 @@ export default function ProductsScreen() {
           />
         }
         ListHeaderComponent={ListHeaderComponent}
-        ListFooterComponent={!isFilterLoading ? ListFooterComponent : null}
+        ListFooterComponent={ListFooterComponent}
         ListEmptyComponent={ListEmptyComponent}
         onEndReachedThreshold={0.5}
       />
@@ -278,16 +259,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
   },
-  titleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
   title: {
     fontSize: 28,
-    marginBottom: 4,
-  },
-  filterLoader: {
-    marginLeft: 12,
     marginBottom: 4,
   },
   productCount: {
@@ -319,10 +292,5 @@ const styles = StyleSheet.create({
   emptyContainer: {
     flex: 1,
     paddingTop: 50,
-  },
-  filterLoadingContainer: {
-    flex: 1,
-    paddingTop: 100,
-    alignItems: 'center',
   },
 });
