@@ -23,7 +23,7 @@ export default function CartPage() {
     try {
       await clearCart();
       toast.success('Cart cleared');
-    } catch (error) {
+    } catch (_error) {
       toast.error('Failed to clear cart');
     } finally {
       setIsClearing(false);

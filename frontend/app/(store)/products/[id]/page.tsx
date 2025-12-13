@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 import { getProduct } from '@/lib/api';
@@ -18,7 +17,6 @@ export async function generateMetadata({
 
   try {
     const product = await getProduct(id);
-    const price = typeof product.price === 'number' ? product.price.toFixed(2) : product.price;
 
     return {
       title: `${product.name} - Trove`,
@@ -49,7 +47,7 @@ export async function generateMetadata({
         images: product.imageUrl ? [product.imageUrl] : [],
       },
     };
-  } catch (error) {
+  } catch (_error) {
     return {
       title: 'Product Not Found - Trove',
       description: 'The product you are looking for could not be found.',
@@ -63,7 +61,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
   let product;
   try {
     product = await getProduct(id);
-  } catch (error) {
+  } catch (_error) {
     notFound();
   }
 

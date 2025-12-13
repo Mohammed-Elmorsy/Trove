@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { Navbar } from '@/components/layout/navbar';
 import { CartProvider } from '@/components/providers/cart-provider';
 import { Toaster } from '@/components/ui/sonner';
 import './globals.css';
@@ -66,7 +65,6 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <CartProvider>
-          <Navbar />
           {children}
           <Toaster position="bottom-left" richColors />
         </CartProvider>
