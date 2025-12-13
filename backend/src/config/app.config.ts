@@ -5,6 +5,7 @@ export interface AppConfig {
   nodeEnv: string;
   frontendUrl: string;
   allowedOrigins: string[];
+  adminSecret: string;
 }
 
 export default registerAs(
@@ -17,5 +18,6 @@ export default registerAs(
       process.env.ALLOWED_ORIGINS ||
       'http://localhost:3000,http://localhost:8081,http://localhost:19006'
     ).split(','),
+    adminSecret: process.env.ADMIN_SECRET || '',
   }),
 );

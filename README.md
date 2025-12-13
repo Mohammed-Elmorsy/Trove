@@ -21,6 +21,7 @@ A modern, full-stack e-commerce application with web and mobile apps, built with
 - **Product Catalog** - Browse products with advanced search, category filters, and price range filters
 - **Shopping Cart** - Session-based cart with add, update, remove items and stock validation
 - **Checkout & Orders** - Complete checkout flow with shipping form, order confirmation, and order lookup
+- **Admin Panel** - Product CRUD, order management, dashboard with stats
 - **Mobile App** - React Native/Expo app for iOS, Android, and web with shared TypeScript types
 - **Category System** - Products organized by categories (Electronics, Fashion, Home & Kitchen, Sports)
 - **Responsive Design** - Mobile-first UI with responsive grid layouts (1-4 columns)
@@ -30,8 +31,7 @@ A modern, full-stack e-commerce application with web and mobile apps, built with
 
 ### Coming Soon
 
-- **Admin Panel** - Manage products and orders (Milestone 5)
-- **User Authentication** - Secure user accounts (Milestone 6)
+- **User Authentication** - Secure user accounts with JWT (Milestone 6)
 
 ## Tech Stack
 
@@ -75,7 +75,8 @@ trove/
 │   │   ├── prisma/      # Prisma service
 │   │   ├── products/    # Products module
 │   │   ├── cart/        # Cart module
-│   │   ├── orders/      # Orders module (Milestone 4)
+│   │   ├── orders/      # Orders module
+│   │   ├── admin/       # Admin module (Milestone 5)
 │   │   └── auth/        # Auth module (Milestone 6)
 │   └── prisma/
 │       └── schema.prisma
@@ -221,7 +222,7 @@ npx prisma migrate reset
 - [x] **Milestone 2**: Product Catalog (Full-Stack) ✅
 - [x] **Milestone 3**: Shopping Cart (Web & Mobile) ✅
 - [x] **Milestone 4**: Checkout & Orders (Full-Stack) ✅
-- [ ] **Milestone 5**: Admin Panel Basics (Full-Stack)
+- [x] **Milestone 5**: Admin Panel Basics (Full-Stack) ✅
 - [ ] **Milestone 6**: User Authentication & Authorization (Full-Stack)
 
 See [docs/project/MILESTONES.md](docs/project/MILESTONES.md) for detailed breakdown.
@@ -251,6 +252,7 @@ See [docs/project/MILESTONES.md](docs/project/MILESTONES.md) for detailed breakd
 - [Milestone 2 Progress](docs/milestones/MILESTONE_2_PROGRESS.md) - Product Catalog completion report
 - [Milestone 3 Progress](docs/milestones/MILESTONE_3_PROGRESS.md) - Shopping Cart completion report
 - [Milestone 4 Progress](docs/milestones/MILESTONE_4_PROGRESS.md) - Checkout & Orders completion report
+- [Milestone 5 Progress](docs/milestones/MILESTONE_5_PROGRESS.md) - Admin Panel completion report
 
 ### Code Reviews
 
@@ -296,6 +298,23 @@ See [docs/project/MILESTONES.md](docs/project/MILESTONES.md) for detailed breakd
 | `GET`   | `/orders`            | Get orders by email    |
 | `PATCH` | `/orders/:id/status` | Update order status    |
 
+### Admin ✅
+
+All admin endpoints require `X-Admin-Secret` header.
+
+| Method   | Endpoint                     | Description               |
+| -------- | ---------------------------- | ------------------------- |
+| `GET`    | `/admin/dashboard/stats`     | Dashboard statistics      |
+| `GET`    | `/admin/products`            | List products (paginated) |
+| `GET`    | `/admin/products/:id`        | Get single product        |
+| `GET`    | `/admin/products/categories` | Get all categories        |
+| `POST`   | `/admin/products`            | Create product            |
+| `PATCH`  | `/admin/products/:id`        | Update product            |
+| `DELETE` | `/admin/products/:id`        | Delete product            |
+| `GET`    | `/admin/orders`              | List orders (paginated)   |
+| `GET`    | `/admin/orders/:id`          | Get order details         |
+| `PATCH`  | `/admin/orders/:id/status`   | Update order status       |
+
 ## Contributing
 
 This is a learning project. Feel free to fork and experiment!
@@ -323,4 +342,4 @@ MIT
 
 ---
 
-**Current Status:** Milestone 4 Complete - Checkout & Orders fully functional on Web and Mobile!
+**Current Status:** Milestone 5 Complete - Admin Panel with product & order management!
