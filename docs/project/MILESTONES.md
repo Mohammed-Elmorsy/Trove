@@ -2,21 +2,33 @@
 
 ## Project Status Overview
 
-**Current Phase**: Milestone 5 Complete! Ready for Milestone 6 - Authentication
+**Current Phase**: Milestone 6 Complete! Full JWT authentication across all platforms
 
-| Milestone                         | Status         | Progress | Details                                         |
-| --------------------------------- | -------------- | -------- | ----------------------------------------------- |
-| 1. Project Setup & Infrastructure | ✅ Complete    | 100%     | All setup done + enhanced configuration         |
-| 2. Product Catalog                | ✅ Complete    | 100%     | Backend & frontend complete with search/filters |
-| 3. Shopping Cart                  | ✅ Complete    | 100%     | Session-based cart with full CRUD               |
-| 4. Checkout & Orders              | ✅ Complete    | 100%     | Full checkout on web AND mobile                 |
-| 5. Admin Panel                    | ✅ Complete    | 100%     | Product & order management with dashboard       |
-| 6. Authentication                 | ⏳ Not Started | 0%       | Planned                                         |
+| Milestone                         | Status      | Progress | Details                                           |
+| --------------------------------- | ----------- | -------- | ------------------------------------------------- |
+| 1. Project Setup & Infrastructure | ✅ Complete | 100%     | All setup done + enhanced configuration           |
+| 2. Product Catalog                | ✅ Complete | 100%     | Backend & frontend complete with search/filters   |
+| 3. Shopping Cart                  | ✅ Complete | 100%     | Session-based cart with full CRUD                 |
+| 4. Checkout & Orders              | ✅ Complete | 100%     | Full checkout on web AND mobile                   |
+| 5. Admin Panel                    | ✅ Complete | 100%     | Product & order management with dashboard         |
+| 6. Authentication                 | ✅ Complete | 100%     | JWT auth on web AND mobile with role-based access |
 
-**Recent Achievements (December 13, 2025)**:
+**Recent Achievements (December 14, 2025)**:
 
-- ✅ **Milestone 5 Complete!** Admin panel with product & order management
-- ✅ Admin authentication with environment variable secret
+- ✅ **Milestone 6 Complete!** Full JWT authentication system
+- ✅ Access + Refresh tokens (15min access, 7-day refresh with rotation)
+- ✅ User registration and login on web and mobile
+- ✅ Cart merge on login (guest cart items merge with user cart)
+- ✅ Role-based access control (USER/ADMIN roles)
+- ✅ Admin panel now uses JWT auth (replaced X-Admin-Secret)
+- ✅ User profile pages on web and mobile
+- ✅ Order history for authenticated users
+- ✅ Secure token storage (localStorage on web, SecureStore on mobile)
+- ✅ Auto token refresh before expiry
+
+**Milestone 5 Achievements (December 13, 2025)**:
+
+- ✅ Admin panel with product & order management
 - ✅ Dashboard with stats (products, orders, revenue, low stock)
 - ✅ Product CRUD with table, create/edit dialogs, delete confirmation
 - ✅ Order management with status updates
@@ -70,12 +82,12 @@
 - ✅ Error Tracking: Integration points for Sentry/custom services
 - ✅ Code Quality: Fixed TypeScript config, removed unnecessary Suspense boundaries
 
-**Next Steps** (Milestone 6 - Authentication):
+**Next Steps** (Post-MVP Enhancements):
 
-- 🎯 User registration and login
-- 🎯 JWT-based authentication
-- 🎯 Role-based access control (User/Admin)
-- 🎯 User profile and order history
+- 🎯 Image uploads for products
+- 🎯 Payment integration (Stripe)
+- 🎯 Email notifications
+- 🎯 Product reviews/ratings
 
 ---
 
@@ -355,42 +367,81 @@
 
 ---
 
-## Milestone 6: User Authentication & Authorization (Full-Stack)
+## Milestone 6: User Authentication & Authorization (Full-Stack) ✅ (Completed)
 
 **Goal**: Add proper user accounts and security
+**Completion Date**: December 14, 2025
 
-### Backend
+### Backend ✅ (Completed)
 
-- [ ] Design User schema
-- [ ] Registration endpoint (bcrypt passwords)
-- [ ] Login endpoint (JWT tokens)
-- [ ] Auth guards/middleware
-- [ ] Role-based access (User/Admin)
-- [ ] Attach user to orders
-- [ ] Protected routes
-- [ ] Refresh token logic (optional)
+- [x] Design User & RefreshToken schema (Prisma)
+  - [x] User model with email, password, name, role (USER/ADMIN)
+  - [x] RefreshToken model with token rotation support
+  - [x] Updated Cart with optional userId (for user carts)
+  - [x] Updated Order with optional userId
+- [x] Registration endpoint (POST /auth/register)
+  - [x] bcrypt password hashing (cost factor 12)
+  - [x] Generates access + refresh tokens
+- [x] Login endpoint (POST /auth/login)
+  - [x] Accepts optional sessionId for cart merge
+  - [x] Merges guest cart items with user cart
+- [x] Refresh endpoint (POST /auth/refresh)
+  - [x] Token rotation (new pair on each refresh)
+- [x] Logout endpoint (POST /auth/logout)
+  - [x] Invalidates refresh token
+- [x] Profile endpoints (GET/PATCH /auth/profile)
+- [x] JWT guards and strategies (Passport.js)
+  - [x] JwtAuthGuard for protected routes
+  - [x] RolesGuard for role-based access
+  - [x] OptionalJwtAuthGuard for guest/user routes
+- [x] Decorators (@Public, @Roles, @CurrentUser)
+- [x] Updated admin controller to use JWT auth
 
-### Frontend
+### Frontend ✅ (Completed)
 
-- [ ] Registration page
-- [ ] Login page
-- [ ] Auth state management (Context or Zustand)
-- [ ] Protected route wrapper
-- [ ] User profile page
-- [ ] Order history (user's orders only)
-- [ ] Logout functionality
-- [ ] Redirect logic (login → redirect back)
+- [x] Auth types (User, AuthResponse, TokenResponse)
+- [x] Auth API functions (register, login, refreshTokens, logout, etc.)
+- [x] AuthProvider with React Context
+  - [x] Access token in memory, refresh token in localStorage
+  - [x] Auto-refresh 1 minute before expiry
+  - [x] Session restore on mount
+- [x] Registration page (/auth/register)
+- [x] Login page (/auth/login)
+  - [x] Cart merge support with toast notification
+  - [x] Redirect to previous page after login
+- [x] User profile page (/account/profile)
+  - [x] Edit name functionality
+- [x] Order history page (/account/orders)
+- [x] Protected account layout
+- [x] Updated navbar with auth state
+  - [x] User dropdown when authenticated
+  - [x] Admin panel link for ADMIN role
+- [x] Updated AdminProvider to use JWT role check
 
-### Success Criteria
+### Mobile ✅ (Completed)
 
-- Users can register and login
-- JWT auth works
-- Admin role enforced
-- Users see only their orders
-- Cart associates with user after login
-- Protected routes redirect to login
+- [x] expo-secure-store for secure token storage
+- [x] Auth API functions
+- [x] AuthProvider with SecureStore
+  - [x] Same refresh logic as web
+- [x] Login screen (/auth/login)
+- [x] Register screen (/auth/register)
+- [x] Profile tab screen
+  - [x] Guest view with login/register buttons
+  - [x] Authenticated view with profile editing
 
-**Commit**: "feat: user authentication and authorization"
+### Success Criteria - All Met! ✅
+
+- ✅ Users can register and login on web AND mobile
+- ✅ JWT auth with access + refresh tokens
+- ✅ Token rotation on refresh
+- ✅ Admin role enforced via JWT
+- ✅ Users see only their orders
+- ✅ Cart merges with user after login
+- ✅ Protected routes redirect to login
+- ✅ Secure token storage on all platforms
+
+**Details**: See [MILESTONE_6_PROGRESS.md](../milestones/MILESTONE_6_PROGRESS.md) for comprehensive breakdown
 
 ---
 
