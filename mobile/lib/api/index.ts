@@ -11,4 +11,7 @@ export { getProducts, getProduct, getCategories } from './products';
 export { getCart, addToCart, updateCartItem, removeCartItem, clearCart } from './cart';
 
 // Orders API
-export { createOrder, getOrder, getOrdersByEmail } from './orders';
+export { createOrder, getOrder, getOrdersByEmail, getUserOrders } from './orders';
+
+// Auth API
+export * from './auth';
