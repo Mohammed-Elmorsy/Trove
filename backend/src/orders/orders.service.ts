@@ -34,20 +34,26 @@ export class OrdersService {
   /**
    * Create order from cart
    */
-  async createOrder(createOrderDto: CreateOrderDto) {
+  async createOrder(createOrderDto: CreateOrderDto, userId?: string) {
     const { sessionId, shippingAddress } = createOrderDto;
 
-    // Get cart with items
-    const cart = await this.prisma.cart.findUnique({
-      where: { sessionId },
-      include: {
-        items: {
-          include: {
-            product: true,
-          },
-        },
-      },
-    });
+    // Get cart with items - prefer userId if authenticated, fall back to sessionId
+    const cartInclude = { items: { include: { product: true } } } as const;
+
+    let cart = userId
+      ? await this.prisma.cart.findUnique({
+          where: { userId },
+          include: cartInclude,
+        })
+      : null;
+
+    // Fall back to sessionId if no user cart found (guest cart not yet migrated)
+    if (!cart && sessionId) {
+      cart = await this.prisma.cart.findUnique({
+        where: { sessionId },
+        include: cartInclude,
+      });
+    }
 
     if (!cart || cart.items.length === 0) {
       throw new BadRequestException('Cart is empty');
@@ -88,7 +94,8 @@ export class OrdersService {
       const newOrder = await tx.order.create({
         data: {
           orderNumber,
-          sessionId,
+          sessionId: userId ? null : sessionId, // Only set sessionId for guest orders
+          userId, // Set userId for authenticated users
           status: 'pending',
           shippingName: shippingAddress.name,
           shippingEmail: shippingAddress.email,
@@ -197,6 +204,29 @@ export class OrdersService {
   }
 
   /**
+   * Get orders by user ID (for authenticated users)
+   */
+  async getOrdersByUser(userId: string) {
+    const orders = await this.prisma.order.findMany({
+      where: { userId },
+      include: {
+        items: {
+          include: {
+            product: {
+              include: {
+                category: true,
+              },
+            },
+          },
+        },
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+
+    return orders.map((order) => this.formatOrderResponse(order));
+  }
+
+  /**
    * Update order status
    */
   async updateOrderStatus(id: string, status: OrderStatus) {
@@ -252,6 +282,7 @@ export class OrdersService {
       id: order.id,
       orderNumber: order.orderNumber,
       sessionId: order.sessionId,
+      userId: order.userId,
       status: order.status,
       shippingAddress: {
         name: order.shippingName,

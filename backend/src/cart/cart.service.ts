@@ -7,13 +7,21 @@ import { PrismaService } from '../prisma/prisma.service';
 import { AddToCartDto } from './dto/add-to-cart.dto';
 import { UpdateCartItemDto } from './dto/update-cart-item.dto';
 
+export interface CartIdentifier {
+  sessionId?: string;
+  userId?: string;
+}
+
 @Injectable()
 export class CartService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getCart(sessionId: string) {
-    const cart = await this.prisma.cart.findUnique({
-      where: { sessionId },
+  async getCart(sessionId: string, userId?: string) {
+    // Prefer userId if authenticated, otherwise use sessionId
+    const whereClause = userId ? { userId } : { sessionId };
+
+    const cart = await this.prisma.cart.findFirst({
+      where: whereClause,
       include: {
         items: {
           include: {
@@ -31,7 +39,8 @@ export class CartService {
     if (!cart) {
       return {
         id: null,
-        sessionId,
+        sessionId: userId ? null : sessionId,
+        userId: userId || null,
         items: [],
         itemCount: 0,
         subtotal: 0,
@@ -47,6 +56,7 @@ export class CartService {
     return {
       id: cart.id,
       sessionId: cart.sessionId,
+      userId: cart.userId,
       items: cart.items.map((item) => ({
         id: item.id,
         productId: item.productId,
@@ -61,7 +71,7 @@ export class CartService {
     };
   }
 
-  async addItem(addToCartDto: AddToCartDto) {
+  async addItem(addToCartDto: AddToCartDto, userId?: string) {
     const { sessionId, productId, quantity } = addToCartDto;
 
     // Validate product exists and has sufficient stock
@@ -73,14 +83,14 @@ export class CartService {
       throw new NotFoundException(`Product with ID ${productId} not found`);
     }
 
-    // Find or create cart
-    let cart = await this.prisma.cart.findUnique({
-      where: { sessionId },
-    });
+    // Find or create cart - prefer userId if authenticated
+    let cart = userId
+      ? await this.prisma.cart.findUnique({ where: { userId } })
+      : await this.prisma.cart.findUnique({ where: { sessionId } });
 
     if (!cart) {
       cart = await this.prisma.cart.create({
-        data: { sessionId },
+        data: userId ? { userId } : { sessionId },
       });
     }
 
@@ -199,9 +209,12 @@ export class CartService {
     return { message: 'Item removed from cart' };
   }
 
-  async clearCart(sessionId: string) {
-    const cart = await this.prisma.cart.findUnique({
-      where: { sessionId },
+  async clearCart(sessionId: string, userId?: string) {
+    // Prefer userId if authenticated
+    const whereClause = userId ? { userId } : { sessionId };
+
+    const cart = await this.prisma.cart.findFirst({
+      where: whereClause,
     });
 
     if (!cart) {
@@ -209,7 +222,7 @@ export class CartService {
     }
 
     await this.prisma.cart.delete({
-      where: { sessionId },
+      where: { id: cart.id },
     });
 
     return { message: 'Cart cleared' };

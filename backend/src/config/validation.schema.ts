@@ -24,7 +24,19 @@ export const validationSchema = Joi.object({
     .required()
     .description('Admin panel secret key (min 32 characters)'),
 
-  // JWT (Will be used in Milestone 6)
-  // JWT_SECRET: Joi.string().min(32).description('JWT secret key'),
-  // JWT_EXPIRES_IN: Joi.string().default('7d').description('JWT expiration time'),
+  // JWT (Milestone 6)
+  JWT_SECRET: Joi.string()
+    .min(32)
+    .required()
+    .description('JWT secret key for access tokens'),
+  JWT_REFRESH_SECRET: Joi.string()
+    .min(32)
+    .required()
+    .description('JWT secret key for refresh tokens'),
+  JWT_ACCESS_EXPIRATION: Joi.string()
+    .default('15m')
+    .description('Access token expiration'),
+  JWT_REFRESH_EXPIRATION: Joi.string()
+    .default('7d')
+    .description('Refresh token expiration'),
 });

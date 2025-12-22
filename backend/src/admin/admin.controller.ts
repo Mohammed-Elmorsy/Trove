@@ -10,7 +10,9 @@ import {
   UseGuards,
   ParseUUIDPipe,
 } from '@nestjs/common';
-import { AdminGuard } from './guards/admin.guard';
+import { Role } from '@prisma/client';
+import { JwtAuthGuard, RolesGuard } from '../auth/guards';
+import { Roles } from '../auth/decorators';
 import { AdminService } from './admin.service';
 import { ProductsService } from '../products/products.service';
 import { CreateProductDto } from '../products/dto/create-product.dto';
@@ -20,7 +22,8 @@ import { UpdateOrderStatusDto } from '../orders/dto/update-order-status.dto';
 import { QueryOrdersDto } from './dto/query-orders.dto';
 
 @Controller('admin')
-@UseGuards(AdminGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.ADMIN)
 export class AdminController {
   constructor(
     private readonly adminService: AdminService,

@@ -9,6 +9,7 @@ import { ProductsModule } from './products/products.module';
 import { CartModule } from './cart/cart.module';
 import { OrdersModule } from './orders/orders.module';
 import { AdminModule } from './admin/admin.module';
+import { AuthModule } from './auth/auth.module';
 import databaseConfig from './config/database.config';
 import appConfig from './config/app.config';
 import { validationSchema } from './config/validation.schema';
@@ -25,14 +26,15 @@ import { validationSchema } from './config/validation.schema';
         allowUnknown: true, // Allow unknown keys (for future expansion)
       },
     }),
-    // Rate limiting: 100 requests per minute per IP
+    // Rate limiting: 200 requests per minute per IP
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
-        limit: 100,
+        limit: 200,
       },
     ]),
     PrismaModule,
+    AuthModule,
     ProductsModule,
     CartModule,
     OrdersModule,
