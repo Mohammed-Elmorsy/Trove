@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Image, StyleSheet, Pressable, Platform } from 'react-native';
+import { View, Image, StyleSheet, Pressable } from 'react-native';
 import { Link } from 'expo-router';
 import { Product } from '@trove/shared';
 import { ThemedText } from './ThemedText';
@@ -24,12 +24,11 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/product/${product.id}`} asChild>
       <Pressable
-        style={({ pressed }) => [
+        style={[
           styles.card,
           {
             backgroundColor: cardBackground,
             borderColor,
-            transform: [{ scale: pressed ? 0.98 : 1 }],
           },
         ]}
       >
@@ -54,7 +53,7 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
         </View>
         <View style={styles.content}>
-          <View style={[styles.categoryBadge, { backgroundColor: `${tintColor}15` }]}>
+          <View style={[styles.categoryBadge, { backgroundColor: 'rgba(37, 99, 235, 0.08)' }]}>
             <ThemedText style={[styles.category, { color: tintColor }]} numberOfLines={1}>
               {product.category.name}
             </ThemedText>
@@ -79,38 +78,21 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginBottom: 12,
     maxWidth: '100%',
-    // Modern shadow
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 8,
-      },
-      android: {
-        elevation: 3,
-      },
-      web: {
-        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.08)',
-      },
-    }),
   },
   imageContainer: {
-    aspectRatio: 1,
     overflow: 'hidden',
     backgroundColor: '#f8f9fa',
     marginHorizontal: 8,
     marginTop: 8,
     borderRadius: 12,
+    height: 150,
   },
   image: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
     borderRadius: 12,
   },
   placeholderImage: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 12,

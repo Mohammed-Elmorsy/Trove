@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, TextInput, Pressable, StyleSheet, Modal, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { ThemedView } from './ThemedView';
 import { ThemedText } from './ThemedText';
 import { useThemeColor } from '@/hooks/useThemeColor';
 
@@ -179,12 +178,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 18,
     borderWidth: 1,
-    gap: 6,
   },
   filterButtonText: {
     fontSize: 14,
     fontWeight: '500',
     maxWidth: 100,
+    marginHorizontal: 6,
   },
   modalOverlay: {
     flex: 1,
@@ -206,11 +205,11 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    gap: 8,
     marginBottom: 24,
   },
   inputWrapper: {
     flex: 1,
+    marginHorizontal: 4,
   },
   inputLabel: {
     fontSize: 12,
@@ -231,14 +230,12 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    height: '100%',
   },
   inputSeparator: {
     paddingBottom: 14,
   },
   buttonContainer: {
     flexDirection: 'row',
-    gap: 12,
   },
   clearButton: {
     flex: 1,
@@ -247,6 +244,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 6,
   },
   applyButton: {
     flex: 1,
@@ -254,6 +252,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
+    marginLeft: 6,
   },
   applyButtonWithClear: {
     flex: 1,

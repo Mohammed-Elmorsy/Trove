@@ -139,7 +139,6 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
     paddingVertical: 12,
-    gap: 8,
   },
   loadingContainer: {
     height: 52,
@@ -153,6 +152,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginRight: 8,
   },
   chipText: {
     fontSize: 14,

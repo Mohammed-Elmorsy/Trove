@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { storage } from '@/lib/storage';
 
 const SESSION_KEY = 'trove_session_id';
 
@@ -22,11 +22,11 @@ export function useSession() {
 
   const loadOrCreateSession = async () => {
     try {
-      let storedSessionId = await AsyncStorage.getItem(SESSION_KEY);
+      let storedSessionId = await storage.getItem(SESSION_KEY);
 
       if (!storedSessionId) {
         storedSessionId = generateSessionId();
-        await AsyncStorage.setItem(SESSION_KEY, storedSessionId);
+        await storage.setItem(SESSION_KEY, storedSessionId);
       }
 
       setSessionId(storedSessionId);
@@ -43,7 +43,7 @@ export function useSession() {
   const clearSession = async () => {
     try {
       const newSessionId = generateSessionId();
-      await AsyncStorage.setItem(SESSION_KEY, newSessionId);
+      await storage.setItem(SESSION_KEY, newSessionId);
       setSessionId(newSessionId);
     } catch (error) {
       console.error('Error clearing session:', error);

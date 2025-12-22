@@ -240,7 +240,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingBottom: 12,
-    gap: 12,
   },
   quantityButton: {
     width: 32,
@@ -255,6 +254,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 16,
     fontWeight: '600',
+    marginHorizontal: 12,
   },
   removeButton: {
     marginLeft: 'auto',

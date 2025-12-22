@@ -227,12 +227,10 @@ const styles = StyleSheet.create({
     height: width,
   },
   image: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
   },
   placeholderImage: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -264,17 +262,18 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 20,
     marginBottom: 16,
-    gap: 6,
   },
   stockWarningText: {
     color: '#92400e',
     fontSize: 14,
     fontWeight: '500',
+    marginLeft: 6,
   },
   outOfStockText: {
     color: '#b91c1c',
     fontSize: 14,
     fontWeight: '500',
+    marginLeft: 6,
   },
   descriptionContainer: {
     marginTop: 8,
@@ -294,12 +293,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
     borderTopWidth: 1,
-    gap: 16,
   },
   quantitySelector: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    marginRight: 16,
   },
   quantityButton: {
     width: 40,
@@ -314,6 +312,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     minWidth: 30,
     textAlign: 'center',
+    marginHorizontal: 12,
   },
   addToCartButton: {
     flex: 1,
@@ -322,11 +321,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 14,
     borderRadius: 12,
-    gap: 8,
   },
   addToCartText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+    marginLeft: 8,
   },
 });

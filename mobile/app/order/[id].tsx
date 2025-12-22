@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, View, Pressable } from 'react-native';
+import { ScrollView, StyleSheet, View, Pressable, Image } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { ThemedView } from '@/components/ThemedView';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ThemedText';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { useThemeColor } from '@/hooks/useThemeColor';
@@ -25,6 +25,7 @@ export default function OrderScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const backgroundColor = useThemeColor({}, 'background');
   const tintColor = useThemeColor({}, 'tint');
   const borderColor = useThemeColor({}, 'border');
   const cardBackground = useThemeColor({}, 'card');
@@ -70,7 +71,7 @@ export default function OrderScreen() {
 
   if (error || !order) {
     return (
-      <ThemedView style={styles.errorContainer}>
+      <View style={[styles.errorContainer, { backgroundColor }]}>
         <Ionicons name="alert-circle-outline" size={80} color="#ef4444" />
         <ThemedText type="subtitle" style={styles.errorTitle}>
           Order Not Found
@@ -84,13 +85,13 @@ export default function OrderScreen() {
         >
           <ThemedText style={styles.buttonText}>Go Home</ThemedText>
         </Pressable>
-      </ThemedView>
+      </View>
     );
   }
 
   return (
-    <ThemedView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+    <SafeAreaView style={[styles.container, { backgroundColor }]} edges={['bottom']}>
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Success Banner */}
         <View
           style={[styles.successBanner, { backgroundColor: '#dcfce7', borderColor: '#22c55e' }]}
@@ -132,6 +133,9 @@ export default function OrderScreen() {
           {/* Order Items */}
           {order.items.map((item) => (
             <View key={item.id} style={styles.orderItem}>
+              {item.product?.imageUrl && (
+                <Image source={{ uri: item.product.imageUrl }} style={styles.itemImage} />
+              )}
               <View style={styles.itemDetails}>
                 <ThemedText numberOfLines={1}>{item.productName}</ThemedText>
                 <ThemedText type="secondary">
@@ -205,7 +209,7 @@ export default function OrderScreen() {
           </Pressable>
         </View>
       </ScrollView>
-    </ThemedView>
+    </SafeAreaView>
   );
 }
 
@@ -214,7 +218,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
   successBanner: {
     flexDirection: 'row',
@@ -257,6 +262,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 12,
+  },
+  itemImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 8,
+    marginRight: 12,
   },
   itemDetails: {
     flex: 1,

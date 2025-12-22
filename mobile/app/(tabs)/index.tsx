@@ -283,11 +283,11 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
   },
   row: {
-    gap: 12,
+    justifyContent: 'space-between',
   },
   cardWrapper: {
     flex: 1,
-    maxWidth: '50%',
+    maxWidth: '48%',
   },
   emptyContainer: {
     flex: 1,
