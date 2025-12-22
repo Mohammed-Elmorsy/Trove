@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  ScrollView,
   StyleSheet,
   View,
   TextInput,
   Pressable,
   Alert,
-  KeyboardAvoidingView,
   Platform,
   Image,
+  ActivityIndicator,
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ThemedView } from '@/components/ThemedView';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedText } from '@/components/ThemedText';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { useCart } from '@/context/CartContext';
+import { useAuth } from '@/context/AuthContext';
 import { useThemeColor } from '@/hooks/useThemeColor';
 import { createOrder } from '@/lib/api';
 import { ShippingAddress } from '@trove/shared';
@@ -43,8 +43,8 @@ interface FormErrors {
 
 export default function CheckoutScreen() {
   const router = useRouter();
-  const insets = useSafeAreaInsets();
   const { cart, sessionId, refreshCart, isLoading: cartLoading } = useCart();
+  const { user, isAuthenticated, accessToken } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -57,6 +57,18 @@ export default function CheckoutScreen() {
   });
   const [errors, setErrors] = useState<FormErrors>({});
 
+  // Auto-fill name and email when user is logged in
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      setFormData((prev) => ({
+        ...prev,
+        name: user.name || prev.name,
+        email: user.email || prev.email,
+      }));
+    }
+  }, [isAuthenticated, user]);
+
+  const backgroundColor = useThemeColor({}, 'background');
   const tintColor = useThemeColor({}, 'tint');
   const borderColor = useThemeColor({}, 'border');
   const cardBackground = useThemeColor({}, 'card');
@@ -122,7 +134,7 @@ export default function CheckoutScreen() {
         zipCode: formData.zipCode,
       };
 
-      const response = await createOrder(sessionId, shippingAddress);
+      const response = await createOrder(sessionId, shippingAddress, accessToken || undefined);
       await refreshCart();
       router.replace(`/order/${response.order.id}` as never);
     } catch (error) {
@@ -146,7 +158,7 @@ export default function CheckoutScreen() {
 
   if (!cart || cart.items.length === 0) {
     return (
-      <ThemedView style={styles.emptyContainer}>
+      <View style={[styles.emptyContainer, { backgroundColor }]}>
         <Ionicons name="cart-outline" size={80} color={tintColor} />
         <ThemedText type="subtitle" style={styles.emptyTitle}>
           Your cart is empty
@@ -160,7 +172,7 @@ export default function CheckoutScreen() {
         >
           <ThemedText style={styles.buttonText}>Browse Products</ThemedText>
         </Pressable>
-      </ThemedView>
+      </View>
     );
   }
 
@@ -168,84 +180,116 @@ export default function CheckoutScreen() {
   const total = cart.subtotal + shipping;
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ThemedView style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-          {/* Order Summary */}
-          <View style={[styles.section, { backgroundColor: cardBackground, borderColor }]}>
-            <ThemedText type="subtitle" style={styles.sectionTitle}>
-              Order Summary
-            </ThemedText>
-            {cart.items.map((item) => (
-              <View key={item.id} style={styles.orderItem}>
-                {item.product.imageUrl && (
-                  <Image source={{ uri: item.product.imageUrl }} style={styles.itemImage} />
-                )}
-                <View style={styles.itemDetails}>
-                  <ThemedText numberOfLines={1}>{item.product.name}</ThemedText>
-                  <ThemedText type="secondary">
-                    {formatPrice(item.product.price)} x {item.quantity}
-                  </ThemedText>
-                </View>
-                <ThemedText type="defaultSemiBold">
-                  {formatPrice(item.product.price * item.quantity)}
+    <SafeAreaView style={[styles.container, { backgroundColor }]} edges={['bottom']}>
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+        enableOnAndroid={true}
+        enableAutomaticScroll={true}
+        extraScrollHeight={Platform.OS === 'ios' ? 20 : 0}
+        keyboardOpeningTime={0}
+      >
+        {/* Order Summary */}
+        <View style={[styles.section, { backgroundColor: cardBackground, borderColor }]}>
+          <ThemedText type="subtitle" style={styles.sectionTitle}>
+            Order Summary
+          </ThemedText>
+          {cart.items.map((item) => (
+            <View key={item.id} style={styles.orderItem}>
+              {item.product.imageUrl && (
+                <Image source={{ uri: item.product.imageUrl }} style={styles.itemImage} />
+              )}
+              <View style={styles.itemDetails}>
+                <ThemedText numberOfLines={1}>{item.product.name}</ThemedText>
+                <ThemedText type="secondary">
+                  {formatPrice(item.product.price)} x {item.quantity}
                 </ThemedText>
               </View>
-            ))}
-            <View style={[styles.divider, { backgroundColor: borderColor }]} />
-            <View style={styles.summaryRow}>
-              <ThemedText type="secondary">Subtotal</ThemedText>
-              <ThemedText>{formatPrice(cart.subtotal)}</ThemedText>
-            </View>
-            <View style={styles.summaryRow}>
-              <ThemedText type="secondary">Shipping</ThemedText>
-              <ThemedText style={shipping === 0 ? { color: '#22c55e' } : undefined}>
-                {shipping === 0 ? 'Free' : formatPrice(shipping)}
+              <ThemedText type="defaultSemiBold">
+                {formatPrice(item.product.price * item.quantity)}
               </ThemedText>
             </View>
-            <View style={styles.summaryRow}>
-              <ThemedText type="subtitle">Total</ThemedText>
-              <ThemedText type="subtitle" style={{ color: tintColor }}>
-                {formatPrice(total)}
-              </ThemedText>
-            </View>
+          ))}
+          <View style={[styles.divider, { backgroundColor: borderColor }]} />
+          <View style={styles.summaryRow}>
+            <ThemedText type="secondary">Subtotal</ThemedText>
+            <ThemedText>{formatPrice(cart.subtotal)}</ThemedText>
           </View>
-
-          {/* Shipping Form */}
-          <View style={[styles.section, { backgroundColor: cardBackground, borderColor }]}>
-            <ThemedText type="subtitle" style={styles.sectionTitle}>
-              Shipping Information
+          <View style={styles.summaryRow}>
+            <ThemedText type="secondary">Shipping</ThemedText>
+            <ThemedText style={shipping === 0 ? { color: '#22c55e' } : undefined}>
+              {shipping === 0 ? 'Free' : formatPrice(shipping)}
             </ThemedText>
+          </View>
+          <View style={styles.summaryRow}>
+            <ThemedText type="subtitle">Total</ThemedText>
+            <ThemedText type="subtitle" style={{ color: tintColor }}>
+              {formatPrice(total)}
+            </ThemedText>
+          </View>
+        </View>
 
-            <View style={styles.inputGroup}>
-              <ThemedText type="secondary" style={styles.label}>
-                Full Name
-              </ThemedText>
+        {/* Shipping Form */}
+        <View style={[styles.section, { backgroundColor: cardBackground, borderColor }]}>
+          <ThemedText type="subtitle" style={styles.sectionTitle}>
+            Shipping Information
+          </ThemedText>
+
+          <View style={styles.inputGroup}>
+            <ThemedText type="secondary" style={styles.label}>
+              Full Name{' '}
+              {isAuthenticated && (
+                <ThemedText type="secondary" style={styles.lockedLabel}>
+                  (from account)
+                </ThemedText>
+              )}
+            </ThemedText>
+            <View style={styles.inputWrapper}>
               <TextInput
                 style={[
                   styles.input,
-                  { borderColor: errors.name ? '#ef4444' : borderColor, color: textColor },
+                  {
+                    borderColor: errors.name ? '#ef4444' : borderColor,
+                    color: textColor,
+                    backgroundColor: isAuthenticated ? 'rgba(228, 228, 231, 0.3)' : 'transparent',
+                  },
                 ]}
                 placeholder="John Doe"
                 placeholderTextColor={placeholderColor}
                 value={formData.name}
                 onChangeText={(v) => updateField('name', v)}
+                editable={!isAuthenticated}
+                returnKeyType="next"
               />
-              {errors.name && <ThemedText style={styles.errorText}>{errors.name}</ThemedText>}
+              {isAuthenticated && (
+                <View style={styles.lockedIcon}>
+                  <Ionicons name="lock-closed" size={16} color={placeholderColor} />
+                </View>
+              )}
             </View>
+            {errors.name && <ThemedText style={styles.errorText}>{errors.name}</ThemedText>}
+          </View>
 
-            <View style={styles.row}>
-              <View style={[styles.inputGroup, { flex: 1 }]}>
-                <ThemedText type="secondary" style={styles.label}>
-                  Email
-                </ThemedText>
+          <View style={styles.row}>
+            <View style={[styles.inputGroup, { flex: 1 }]}>
+              <ThemedText type="secondary" style={styles.label}>
+                Email{' '}
+                {isAuthenticated && (
+                  <ThemedText type="secondary" style={styles.lockedLabel}>
+                    (from account)
+                  </ThemedText>
+                )}
+              </ThemedText>
+              <View style={styles.inputWrapper}>
                 <TextInput
                   style={[
                     styles.input,
-                    { borderColor: errors.email ? '#ef4444' : borderColor, color: textColor },
+                    {
+                      borderColor: errors.email ? '#ef4444' : borderColor,
+                      color: textColor,
+                      backgroundColor: isAuthenticated ? 'rgba(228, 228, 231, 0.3)' : 'transparent',
+                    },
                   ]}
                   placeholder="john@example.com"
                   placeholderTextColor={placeholderColor}
@@ -253,138 +297,132 @@ export default function CheckoutScreen() {
                   autoCapitalize="none"
                   value={formData.email}
                   onChangeText={(v) => updateField('email', v)}
+                  editable={!isAuthenticated}
+                  returnKeyType="next"
                 />
-                {errors.email && <ThemedText style={styles.errorText}>{errors.email}</ThemedText>}
+                {isAuthenticated && (
+                  <View style={styles.lockedIcon}>
+                    <Ionicons name="lock-closed" size={16} color={placeholderColor} />
+                  </View>
+                )}
               </View>
-              <View style={[styles.inputGroup, { flex: 1, marginLeft: 12 }]}>
-                <ThemedText type="secondary" style={styles.label}>
-                  Phone
-                </ThemedText>
-                <TextInput
-                  style={[
-                    styles.input,
-                    { borderColor: errors.phone ? '#ef4444' : borderColor, color: textColor },
-                  ]}
-                  placeholder="(555) 123-4567"
-                  placeholderTextColor={placeholderColor}
-                  keyboardType="phone-pad"
-                  value={formData.phone}
-                  onChangeText={(v) => updateField('phone', v)}
-                />
-                {errors.phone && <ThemedText style={styles.errorText}>{errors.phone}</ThemedText>}
-              </View>
+              {errors.email && <ThemedText style={styles.errorText}>{errors.email}</ThemedText>}
             </View>
-
-            <View style={styles.inputGroup}>
+            <View style={[styles.inputGroup, { flex: 1, marginLeft: 12 }]}>
               <ThemedText type="secondary" style={styles.label}>
-                Street Address
+                Phone
               </ThemedText>
               <TextInput
                 style={[
                   styles.input,
-                  { borderColor: errors.address ? '#ef4444' : borderColor, color: textColor },
+                  { borderColor: errors.phone ? '#ef4444' : borderColor, color: textColor },
                 ]}
-                placeholder="123 Main St"
+                placeholder="(555) 123-4567"
                 placeholderTextColor={placeholderColor}
-                value={formData.address}
-                onChangeText={(v) => updateField('address', v)}
+                keyboardType="phone-pad"
+                value={formData.phone}
+                onChangeText={(v) => updateField('phone', v)}
+                returnKeyType="next"
               />
-              {errors.address && <ThemedText style={styles.errorText}>{errors.address}</ThemedText>}
-            </View>
-
-            <View style={styles.row}>
-              <View style={[styles.inputGroup, { flex: 2 }]}>
-                <ThemedText type="secondary" style={styles.label}>
-                  City
-                </ThemedText>
-                <TextInput
-                  style={[
-                    styles.input,
-                    { borderColor: errors.city ? '#ef4444' : borderColor, color: textColor },
-                  ]}
-                  placeholder="New York"
-                  placeholderTextColor={placeholderColor}
-                  value={formData.city}
-                  onChangeText={(v) => updateField('city', v)}
-                />
-                {errors.city && <ThemedText style={styles.errorText}>{errors.city}</ThemedText>}
-              </View>
-              <View style={[styles.inputGroup, { flex: 1, marginLeft: 12 }]}>
-                <ThemedText type="secondary" style={styles.label}>
-                  State
-                </ThemedText>
-                <TextInput
-                  style={[
-                    styles.input,
-                    { borderColor: errors.state ? '#ef4444' : borderColor, color: textColor },
-                  ]}
-                  placeholder="NY"
-                  placeholderTextColor={placeholderColor}
-                  value={formData.state}
-                  onChangeText={(v) => updateField('state', v)}
-                />
-                {errors.state && <ThemedText style={styles.errorText}>{errors.state}</ThemedText>}
-              </View>
-              <View style={[styles.inputGroup, { flex: 1, marginLeft: 12 }]}>
-                <ThemedText type="secondary" style={styles.label}>
-                  ZIP Code
-                </ThemedText>
-                <TextInput
-                  style={[
-                    styles.input,
-                    { borderColor: errors.zipCode ? '#ef4444' : borderColor, color: textColor },
-                  ]}
-                  placeholder="10001"
-                  placeholderTextColor={placeholderColor}
-                  keyboardType="numeric"
-                  value={formData.zipCode}
-                  onChangeText={(v) => updateField('zipCode', v)}
-                />
-                {errors.zipCode && (
-                  <ThemedText style={styles.errorText}>{errors.zipCode}</ThemedText>
-                )}
-              </View>
+              {errors.phone && <ThemedText style={styles.errorText}>{errors.phone}</ThemedText>}
             </View>
           </View>
-        </ScrollView>
+
+          <View style={styles.inputGroup}>
+            <ThemedText type="secondary" style={styles.label}>
+              Street Address
+            </ThemedText>
+            <TextInput
+              style={[
+                styles.input,
+                { borderColor: errors.address ? '#ef4444' : borderColor, color: textColor },
+              ]}
+              placeholder="123 Main St"
+              placeholderTextColor={placeholderColor}
+              value={formData.address}
+              onChangeText={(v) => updateField('address', v)}
+              returnKeyType="next"
+            />
+            {errors.address && <ThemedText style={styles.errorText}>{errors.address}</ThemedText>}
+          </View>
+
+          <View style={styles.row}>
+            <View style={[styles.inputGroup, { flex: 2 }]}>
+              <ThemedText type="secondary" style={styles.label}>
+                City
+              </ThemedText>
+              <TextInput
+                style={[
+                  styles.input,
+                  { borderColor: errors.city ? '#ef4444' : borderColor, color: textColor },
+                ]}
+                placeholder="New York"
+                placeholderTextColor={placeholderColor}
+                value={formData.city}
+                onChangeText={(v) => updateField('city', v)}
+                returnKeyType="next"
+              />
+              {errors.city && <ThemedText style={styles.errorText}>{errors.city}</ThemedText>}
+            </View>
+            <View style={[styles.inputGroup, { flex: 1, marginLeft: 12 }]}>
+              <ThemedText type="secondary" style={styles.label}>
+                State
+              </ThemedText>
+              <TextInput
+                style={[
+                  styles.input,
+                  { borderColor: errors.state ? '#ef4444' : borderColor, color: textColor },
+                ]}
+                placeholder="NY"
+                placeholderTextColor={placeholderColor}
+                value={formData.state}
+                onChangeText={(v) => updateField('state', v)}
+                returnKeyType="next"
+              />
+              {errors.state && <ThemedText style={styles.errorText}>{errors.state}</ThemedText>}
+            </View>
+            <View style={[styles.inputGroup, { flex: 1, marginLeft: 12 }]}>
+              <ThemedText type="secondary" style={styles.label}>
+                ZIP Code
+              </ThemedText>
+              <TextInput
+                style={[
+                  styles.input,
+                  { borderColor: errors.zipCode ? '#ef4444' : borderColor, color: textColor },
+                ]}
+                placeholder="10001"
+                placeholderTextColor={placeholderColor}
+                keyboardType="numeric"
+                value={formData.zipCode}
+                onChangeText={(v) => updateField('zipCode', v)}
+                returnKeyType="done"
+              />
+              {errors.zipCode && <ThemedText style={styles.errorText}>{errors.zipCode}</ThemedText>}
+            </View>
+          </View>
+        </View>
 
         {/* Place Order Button */}
-        <View
+        <Pressable
           style={[
-            styles.footer,
-            {
-              backgroundColor: cardBackground,
-              borderTopColor: borderColor,
-              paddingBottom: Math.max(insets.bottom, 16),
-            },
+            styles.submitButton,
+            { backgroundColor: tintColor },
+            isSubmitting && styles.submitButtonDisabled,
           ]}
+          onPress={handleSubmit}
+          disabled={isSubmitting}
         >
-          <Pressable
-            style={[
-              styles.submitButton,
-              { backgroundColor: tintColor },
-              isSubmitting && styles.submitButtonDisabled,
-            ]}
-            onPress={handleSubmit}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <LoadingSpinner size="small" />
-            ) : (
-              <>
-                <Ionicons
-                  name="checkmark-circle"
-                  size={20}
-                  color="#fff"
-                  style={{ marginRight: 8 }}
-                />
-                <ThemedText style={styles.submitButtonText}>Place Order</ThemedText>
-              </>
-            )}
-          </Pressable>
-        </View>
-      </ThemedView>
-    </KeyboardAvoidingView>
+          {isSubmitting ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <>
+              <Ionicons name="checkmark-circle" size={20} color="#fff" style={{ marginRight: 8 }} />
+              <ThemedText style={styles.submitButtonText}>Place Order</ThemedText>
+            </>
+          )}
+        </Pressable>
+      </KeyboardAwareScrollView>
+    </SafeAreaView>
   );
 }
 
@@ -394,7 +432,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
-    paddingBottom: 120,
   },
   section: {
     borderRadius: 12,
@@ -436,12 +473,23 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     fontSize: 14,
   },
+  lockedLabel: {
+    fontSize: 12,
+  },
+  inputWrapper: {
+    position: 'relative',
+  },
   input: {
     borderWidth: 1,
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
     fontSize: 16,
+  },
+  lockedIcon: {
+    position: 'absolute',
+    right: 12,
+    top: 12,
   },
   row: {
     flexDirection: 'row',
@@ -451,20 +499,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 4,
   },
-  footer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    padding: 16,
-    borderTopWidth: 1,
-  },
   submitButton: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     paddingVertical: 16,
     borderRadius: 12,
+    marginTop: 8,
   },
   submitButtonDisabled: {
     opacity: 0.7,
