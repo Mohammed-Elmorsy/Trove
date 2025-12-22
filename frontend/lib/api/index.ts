@@ -12,3 +12,14 @@ export { getCart, addToCart, updateCartItem, removeCartItem, clearCart } from '.
 
 // Orders API
 export { createOrder, getOrder, getOrdersByEmail } from './orders';
+
+// Auth API
+export {
+  register,
+  login,
+  refreshTokens,
+  getProfile,
+  updateProfile,
+  logout,
+  getUserOrders,
+} from './auth';

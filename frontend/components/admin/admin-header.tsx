@@ -6,9 +6,9 @@ import { Button } from '@/components/ui/button';
 import { useAdmin } from '@/components/providers/admin-provider';
 
 export function AdminHeader() {
-  const { isAuthenticated } = useAdmin();
+  const { isAdmin } = useAdmin();
 
-  if (!isAuthenticated) return null;
+  if (!isAdmin) return null;
 
   return (
     <header className="h-16 border-b bg-card flex items-center justify-between px-6">

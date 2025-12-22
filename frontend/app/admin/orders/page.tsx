@@ -27,6 +27,7 @@ import { getAdminOrders, updateOrderStatus } from '@/lib/admin-api';
 import type { AdminOrdersResponse } from '@/types/admin';
 import type { OrderStatus } from '@/types/order';
 import { AdminAuthGuard } from '@/components/admin/admin-auth-guard';
+import { useAdmin } from '@/components/providers/admin-provider';
 
 const ORDER_STATUSES: OrderStatus[] = [
   'pending',
@@ -56,6 +57,7 @@ export default function OrdersPage() {
 
 function OrdersContent() {
   const router = useRouter();
+  const { accessToken } = useAdmin();
   const [orders, setOrders] = useState<AdminOrdersResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<OrderStatus | 'all'>('all');
@@ -64,8 +66,10 @@ function OrdersContent() {
   const limit = 10;
 
   const fetchOrders = useCallback(async () => {
+    if (!accessToken) return;
+
     try {
-      const data = await getAdminOrders({
+      const data = await getAdminOrders(accessToken, {
         page,
         limit,
         status: statusFilter === 'all' ? undefined : statusFilter,
@@ -76,16 +80,18 @@ function OrdersContent() {
     } finally {
       setIsLoading(false);
     }
-  }, [page, statusFilter]);
+  }, [accessToken, page, statusFilter]);
 
   useEffect(() => {
     fetchOrders();
   }, [fetchOrders]);
 
   const handleStatusChange = async (orderId: string, newStatus: OrderStatus) => {
+    if (!accessToken) return;
+
     setUpdatingOrderId(orderId);
     try {
-      await updateOrderStatus(orderId, newStatus);
+      await updateOrderStatus(accessToken, orderId, newStatus);
       toast.success('Order status updated');
       fetchOrders();
     } catch (error) {

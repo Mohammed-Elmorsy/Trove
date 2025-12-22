@@ -6,16 +6,23 @@ import { API_BASE_URL, DEFAULT_TIMEOUT, fetchWithTimeout } from './client';
  */
 export async function createOrder(
   sessionId: string,
-  shippingAddress: ShippingAddress
+  shippingAddress: ShippingAddress,
+  accessToken?: string | null
 ): Promise<OrderResponse> {
   const url = `${API_BASE_URL}/orders`;
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
+  if (accessToken) {
+    headers['Authorization'] = `Bearer ${accessToken}`;
+  }
 
   try {
     const res = await fetchWithTimeout(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers,
       body: JSON.stringify({ sessionId, shippingAddress }),
       timeout: DEFAULT_TIMEOUT,
     });

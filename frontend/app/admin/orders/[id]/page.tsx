@@ -21,6 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from '@/components/u
 import { getAdminOrder, updateOrderStatus } from '@/lib/admin-api';
 import type { Order, OrderStatus } from '@/types/order';
 import { AdminAuthGuard } from '@/components/admin/admin-auth-guard';
+import { useAdmin } from '@/components/providers/admin-provider';
 
 const ORDER_STATUSES: OrderStatus[] = [
   'pending',
@@ -51,6 +52,7 @@ export default function OrderDetailPage() {
 function OrderDetailContent() {
   const params = useParams();
   const router = useRouter();
+  const { accessToken } = useAdmin();
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState(false);
@@ -59,9 +61,11 @@ function OrderDetailContent() {
   const orderId = params.id as string;
 
   useEffect(() => {
+    if (!accessToken) return;
+
     const fetchOrder = async () => {
       try {
-        const data = await getAdminOrder(orderId);
+        const data = await getAdminOrder(accessToken, orderId);
         setOrder(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to fetch order');
@@ -71,14 +75,14 @@ function OrderDetailContent() {
     };
 
     fetchOrder();
-  }, [orderId]);
+  }, [accessToken, orderId]);
 
   const handleStatusChange = async (newStatus: OrderStatus) => {
-    if (!order) return;
+    if (!order || !accessToken) return;
 
     setIsUpdating(true);
     try {
-      const updatedOrder = await updateOrderStatus(order.id, newStatus);
+      const updatedOrder = await updateOrderStatus(accessToken, order.id, newStatus);
       setOrder(updatedOrder);
       toast.success('Order status updated');
     } catch (err) {

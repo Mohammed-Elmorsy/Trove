@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,23 +13,30 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { shippingAddressSchema, ShippingAddressFormData } from '@/lib/validations/checkout';
 import { createOrder } from '@/lib/api';
 import { useCart } from '@/lib/hooks/use-cart';
+import { useAuth } from '@/components/providers/auth-provider';
 import { toast } from 'sonner';
 
-export function CheckoutForm() {
+interface CheckoutFormProps {
+  onOrderPlaced?: () => void;
+}
+
+export function CheckoutForm({ onOrderPlaced }: CheckoutFormProps) {
   const router = useRouter();
   const { sessionId, refreshCart } = useCart();
+  const { user, accessToken } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<ShippingAddressFormData>({
     resolver: zodResolver(shippingAddressSchema),
     defaultValues: {
-      name: '',
-      email: '',
+      name: user?.name || '',
+      email: user?.email || '',
       phone: '',
       address: '',
       city: '',
@@ -37,6 +44,17 @@ export function CheckoutForm() {
       zipCode: '',
     },
   });
+
+  // Auto-fill form when user data becomes available
+  useEffect(() => {
+    if (user) {
+      reset((currentValues) => ({
+        ...currentValues,
+        name: currentValues.name || user.name || '',
+        email: currentValues.email || user.email || '',
+      }));
+    }
+  }, [user, reset]);
 
   const onSubmit = async (data: ShippingAddressFormData) => {
     if (!sessionId) {
@@ -48,7 +66,8 @@ export function CheckoutForm() {
     setError(null);
 
     try {
-      const response = await createOrder(sessionId, data);
+      const response = await createOrder(sessionId, data, accessToken);
+      onOrderPlaced?.();
       await refreshCart();
       toast.success('Order placed successfully!');
       router.push(`/orders/${response.order.id}`);

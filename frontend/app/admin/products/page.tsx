@@ -46,6 +46,7 @@ import {
 import { productSchema, type ProductFormData } from '@/lib/validations/admin';
 import type { Product, Category, ProductsResponse } from '@/types/product';
 import { AdminAuthGuard } from '@/components/admin/admin-auth-guard';
+import { useAdmin } from '@/components/providers/admin-provider';
 
 export default function ProductsPage() {
   return (
@@ -56,6 +57,7 @@ export default function ProductsPage() {
 }
 
 function ProductsContent() {
+  const { accessToken } = useAdmin();
   const [products, setProducts] = useState<ProductsResponse | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -70,24 +72,32 @@ function ProductsContent() {
   const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
 
   const fetchProducts = useCallback(async () => {
+    if (!accessToken) return;
+
     try {
-      const data = await getAdminProducts({ page, limit, search: search || undefined });
+      const data = await getAdminProducts(accessToken, {
+        page,
+        limit,
+        search: search || undefined,
+      });
       setProducts(data);
     } catch (error) {
       toast.error(error instanceof Error ? error.message : 'Failed to fetch products');
     } finally {
       setIsLoading(false);
     }
-  }, [page, search]);
+  }, [accessToken, page, search]);
 
   const fetchCategories = useCallback(async () => {
+    if (!accessToken) return;
+
     try {
-      const data = await getAdminCategories();
+      const data = await getAdminCategories(accessToken);
       setCategories(data);
     } catch (error) {
       console.error('Failed to fetch categories:', error);
     }
-  }, []);
+  }, [accessToken]);
 
   useEffect(() => {
     fetchProducts();
@@ -245,6 +255,7 @@ function ProductsContent() {
         onOpenChange={setIsFormDialogOpen}
         product={editingProduct}
         categories={categories}
+        accessToken={accessToken}
         onSuccess={handleFormSuccess}
       />
 
@@ -253,6 +264,7 @@ function ProductsContent() {
         open={isDeleteDialogOpen}
         onOpenChange={setIsDeleteDialogOpen}
         product={deletingProduct}
+        accessToken={accessToken}
         onSuccess={handleDeleteSuccess}
       />
     </div>
@@ -264,12 +276,14 @@ function ProductFormDialog({
   onOpenChange,
   product,
   categories,
+  accessToken,
   onSuccess,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   product: Product | null;
   categories: Category[];
+  accessToken: string | null;
   onSuccess: () => void;
 }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -325,7 +339,7 @@ function ProductFormDialog({
 
   const onSubmit = async (data: ProductFormData) => {
     // Prevent double submissions (React Strict Mode can cause double renders)
-    if (submittingRef.current) return;
+    if (submittingRef.current || !accessToken) return;
     submittingRef.current = true;
     setIsSubmitting(true);
 
@@ -341,10 +355,10 @@ function ProductFormDialog({
       };
 
       if (isEditing && product) {
-        await updateProduct(product.id, payload);
+        await updateProduct(accessToken, product.id, payload);
         toast.success('Product updated successfully');
       } else {
-        await createProduct(payload);
+        await createProduct(accessToken, payload);
         toast.success('Product created successfully');
       }
       // Revalidate public products cache
@@ -468,18 +482,20 @@ function DeleteProductDialog({
   open,
   onOpenChange,
   product,
+  accessToken,
   onSuccess,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   product: Product | null;
+  accessToken: string | null;
   onSuccess: () => void;
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
   const deletingRef = useRef(false); // Prevent double deletions
 
   const handleDelete = async () => {
-    if (!product) return;
+    if (!product || !accessToken) return;
 
     // Prevent double deletions
     if (deletingRef.current) return;
@@ -487,7 +503,7 @@ function DeleteProductDialog({
     setIsDeleting(true);
 
     try {
-      await deleteProduct(product.id);
+      await deleteProduct(accessToken, product.id);
       // Revalidate public products cache
       await revalidateProducts();
       toast.success('Product deleted successfully');

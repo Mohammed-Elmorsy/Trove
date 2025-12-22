@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Loader2, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,8 +11,10 @@ import { useCart } from '@/lib/hooks/use-cart';
 
 export default function CheckoutPage() {
   const { cart, isLoading } = useCart();
+  const [isOrderPlaced, setIsOrderPlaced] = useState(false);
 
-  if (isLoading) {
+  // Show loading while cart is loading or order was just placed (redirecting)
+  if (isLoading || isOrderPlaced) {
     return (
       <main className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
@@ -64,7 +67,7 @@ export default function CheckoutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Checkout Form */}
           <div className="lg:col-span-2">
-            <CheckoutForm />
+            <CheckoutForm onOrderPlaced={() => setIsOrderPlaced(true)} />
           </div>
 
           {/* Order Summary */}

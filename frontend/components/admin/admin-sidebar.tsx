@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { LayoutDashboard, Package, ShoppingCart, LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAdmin } from '@/components/providers/admin-provider';
+import { useAuth } from '@/components/providers/auth-provider';
 import { Button } from '@/components/ui/button';
 
 const navItems = [
@@ -15,9 +16,10 @@ const navItems = [
 
 export function AdminSidebar() {
   const pathname = usePathname();
-  const { isAuthenticated, logout } = useAdmin();
+  const { isAdmin } = useAdmin();
+  const { logout } = useAuth();
 
-  if (!isAuthenticated) return null;
+  if (!isAdmin) return null;
 
   return (
     <aside className="w-64 bg-card border-r min-h-screen flex flex-col">

@@ -1,50 +1,42 @@
 'use client';
 
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, type ReactNode } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { isAdminAuthenticated, logoutAdmin, validateAdminSecret } from '@/lib/admin-api';
+import { useAuth } from './auth-provider';
 
 interface AdminContextType {
   isAuthenticated: boolean;
+  isAdmin: boolean;
   isLoading: boolean;
-  login: (secret: string) => Promise<boolean>;
-  logout: () => void;
+  accessToken: string | null;
 }
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export function AdminProvider({ children }: { children: ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const { user, isAuthenticated, isLoading, accessToken } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
+  const isAdmin = isAuthenticated && user?.role === 'ADMIN';
+
   useEffect(() => {
-    // Check authentication status on mount
-    const authenticated = isAdminAuthenticated();
-    setIsAuthenticated(authenticated);
-    setIsLoading(false);
+    if (isLoading) return;
 
-    // Redirect to login if not authenticated and not already on login page
-    if (!authenticated && pathname !== '/admin/login') {
-      router.push('/admin/login');
+    // If not authenticated, redirect to main login
+    if (!isAuthenticated) {
+      router.push('/login?redirect=' + encodeURIComponent(pathname));
+      return;
     }
-  }, [pathname, router]);
 
-  const login = useCallback(async (secret: string): Promise<boolean> => {
-    const valid = await validateAdminSecret(secret);
-    setIsAuthenticated(valid);
-    return valid;
-  }, []);
-
-  const logout = useCallback(() => {
-    logoutAdmin();
-    setIsAuthenticated(false);
-    router.push('/admin/login');
-  }, [router]);
+    // If authenticated but not admin, redirect to home
+    if (!isAdmin) {
+      router.push('/');
+    }
+  }, [isLoading, isAuthenticated, isAdmin, pathname, router]);
 
   return (
-    <AdminContext.Provider value={{ isAuthenticated, isLoading, login, logout }}>
+    <AdminContext.Provider value={{ isAuthenticated, isAdmin, isLoading, accessToken }}>
       {children}
     </AdminContext.Provider>
   );

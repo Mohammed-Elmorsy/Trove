@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Search, Loader2, Package, ArrowRight } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { PageBreadcrumb } from '@/components/layout/page-breadcrumb';
+import { useAuth } from '@/components/providers/auth-provider';
 import { getOrdersByEmail } from '@/lib/api';
 import { Order } from '@/types/order';
 
@@ -32,6 +34,8 @@ const statusColors: Record<string, string> = {
 };
 
 export default function OrderLookupPage() {
+  const router = useRouter();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [orders, setOrders] = useState<Order[] | null>(null);
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,6 +48,26 @@ export default function OrderLookupPage() {
   } = useForm<EmailFormData>({
     resolver: zodResolver(emailSchema),
   });
+
+  // Redirect authenticated users to their order history
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      router.replace('/account/orders');
+    }
+  }, [isAuthenticated, authLoading, router]);
+
+  // Show loading while checking auth
+  if (authLoading || isAuthenticated) {
+    return (
+      <main className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-4 py-8">
+          <div className="flex justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
+        </div>
+      </main>
+    );
+  }
 
   const onSubmit = async (data: EmailFormData) => {
     setIsSearching(true);

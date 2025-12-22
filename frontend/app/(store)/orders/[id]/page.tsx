@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { PageBreadcrumb } from '@/components/layout/page-breadcrumb';
+import { ViewOrdersButton } from '@/components/orders/view-orders-button';
 import { getOrder } from '@/lib/api';
 
 interface OrderPageProps {
@@ -170,9 +171,7 @@ export default async function OrderPage({ params }: OrderPageProps) {
                   <Button asChild className="w-full">
                     <Link href="/products">Continue Shopping</Link>
                   </Button>
-                  <Button variant="outline" asChild className="w-full">
-                    <Link href="/orders">View All Orders</Link>
-                  </Button>
+                  <ViewOrdersButton />
                 </div>
               </CardContent>
             </Card>

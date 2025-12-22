@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { getDashboardStats } from '@/lib/admin-api';
 import type { DashboardStats } from '@/types/admin';
 import { AdminAuthGuard } from '@/components/admin/admin-auth-guard';
+import { useAdmin } from '@/components/providers/admin-provider';
 
 export default function DashboardPage() {
   return (
@@ -17,16 +18,19 @@ export default function DashboardPage() {
 }
 
 function DashboardContent() {
+  const { accessToken } = useAdmin();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    getDashboardStats()
+    if (!accessToken) return;
+
+    getDashboardStats(accessToken)
       .then(setStats)
       .catch((err) => setError(err.message))
       .finally(() => setIsLoading(false));
-  }, []);
+  }, [accessToken]);
 
   if (isLoading) {
     return <DashboardSkeleton />;
@@ -49,7 +53,7 @@ function DashboardContent() {
     <div className="space-y-6">
       <h1 className="text-3xl font-bold">Dashboard</h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <StatCard title="Total Products" value={stats?.totalProducts ?? 0} icon={Package} />
         <StatCard title="Total Orders" value={stats?.totalOrders ?? 0} icon={ShoppingCart} />
         <StatCard
@@ -105,13 +109,13 @@ function StatCard({
   return (
     <Card>
       <CardContent className="pt-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-4">
           <div>
             <p className="text-sm text-muted-foreground">{title}</p>
             <p className="text-2xl font-bold">{value}</p>
           </div>
           <div
-            className={`h-12 w-12 rounded-full flex items-center justify-center ${
+            className={`h-12 w-12 shrink-0 rounded-full flex items-center justify-center ${
               variant === 'warning' ? 'bg-yellow-100 dark:bg-yellow-900/20' : 'bg-primary/10'
             }`}
           >
@@ -131,7 +135,7 @@ function DashboardSkeleton() {
   return (
     <div className="space-y-6">
       <Skeleton className="h-10 w-48" />
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {[1, 2, 3, 4, 5, 6].map((i) => (
           <Skeleton key={i} className="h-28" />
         ))}

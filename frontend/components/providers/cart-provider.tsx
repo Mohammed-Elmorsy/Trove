@@ -1,6 +1,14 @@
 'use client';
 
-import { createContext, useCallback, useEffect, useState, useRef, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useCallback,
+  useEffect,
+  useState,
+  useRef,
+  ReactNode,
+} from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { Cart, CartItem } from '@/types/cart';
 import * as api from '@/lib/api';
@@ -182,4 +190,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
       {children}
     </CartContext.Provider>
   );
+}
+
+export function useCart() {
+  const context = useContext(CartContext);
+  if (context === undefined) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+  return context;
 }

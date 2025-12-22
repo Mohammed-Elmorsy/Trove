@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { AuthProvider } from '@/components/providers/auth-provider';
 import { CartProvider } from '@/components/providers/cart-provider';
 import { Toaster } from '@/components/ui/sonner';
 import './globals.css';
@@ -64,10 +65,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased">
-        <CartProvider>
-          {children}
-          <Toaster position="bottom-left" richColors />
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            {children}
+            <Toaster position="bottom-left" richColors />
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );
