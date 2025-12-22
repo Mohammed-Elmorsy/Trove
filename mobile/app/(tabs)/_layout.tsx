@@ -44,7 +44,6 @@ export default function TabLayout() {
           backgroundColor,
         },
         headerTintColor: Colors[colorScheme ?? 'light'].text,
-        sceneStyle: { backgroundColor },
       }}
     >
       <Tabs.Screen
@@ -66,6 +65,13 @@ export default function TabLayout() {
         options={{
           title: 'Cart',
           tabBarIcon: ({ color }) => <CartTabBarIcon color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <TabBarIcon name="person-outline" color={color} />,
         }}
       />
     </Tabs>
