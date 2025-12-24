@@ -30,7 +30,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
 
     if (!user) {
-      throw new UnauthorizedException('User no longer exists');
+      // Use generic message to prevent user enumeration
+      throw new UnauthorizedException('Invalid or expired token');
     }
 
     return {

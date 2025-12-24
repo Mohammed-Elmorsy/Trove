@@ -38,6 +38,8 @@ export interface TokenResponse {
 @Injectable()
 export class AuthService {
   private readonly BCRYPT_ROUNDS = 12;
+  private readonly MAX_FAILED_ATTEMPTS = 5;
+  private readonly LOCKOUT_DURATION_MS = 15 * 60 * 1000; // 15 minutes
   private readonly accessExpiration: string;
   private readonly refreshExpiration: string;
   private readonly jwtSecret: string;
@@ -108,11 +110,47 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
+    // Check if account is locked
+    if (user.lockedUntil && user.lockedUntil > new Date()) {
+      const remainingMinutes = Math.ceil(
+        (user.lockedUntil.getTime() - Date.now()) / 60000,
+      );
+      throw new UnauthorizedException(
+        `Account is locked. Try again in ${remainingMinutes} minute(s)`,
+      );
+    }
+
     // Verify password
     const isPasswordValid = await bcrypt.compare(dto.password, user.password);
 
     if (!isPasswordValid) {
+      // Increment failed login attempts
+      const failedAttempts = user.failedLoginAttempts + 1;
+      const updateData: { failedLoginAttempts: number; lockedUntil?: Date } = {
+        failedLoginAttempts: failedAttempts,
+      };
+
+      // Lock account if max attempts reached
+      if (failedAttempts >= this.MAX_FAILED_ATTEMPTS) {
+        updateData.lockedUntil = new Date(
+          Date.now() + this.LOCKOUT_DURATION_MS,
+        );
+      }
+
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: updateData,
+      });
+
       throw new UnauthorizedException('Invalid email or password');
+    }
+
+    // Reset failed attempts on successful login
+    if (user.failedLoginAttempts > 0 || user.lockedUntil) {
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: { failedLoginAttempts: 0, lockedUntil: null },
+      });
     }
 
     // Generate tokens
