@@ -1,5 +1,8 @@
 # Trove - E-Commerce Application
 
+[![CI](https://github.com/Mohammed-Elmorsy/Trove/actions/workflows/ci.yml/badge.svg)](https://github.com/Mohammed-Elmorsy/Trove/actions/workflows/ci.yml)
+[![Deploy Backend](https://github.com/Mohammed-Elmorsy/Trove/actions/workflows/deploy-backend.yml/badge.svg)](https://github.com/Mohammed-Elmorsy/Trove/actions/workflows/deploy-backend.yml)
+
 ![Next.js](https://img.shields.io/badge/Next.js-16.0.7-black?style=flat&logo=next.js&logoColor=white)
 ![React](https://img.shields.io/badge/React-19.2.1-blue?style=flat&logo=react&logoColor=white)
 ![NestJS](https://img.shields.io/badge/NestJS-11.0.1-E0234E?style=flat&logo=nestjs&logoColor=white)
@@ -223,8 +226,29 @@ npx prisma migrate reset
 - [x] **Milestone 4**: Checkout & Orders (Full-Stack) ✅
 - [x] **Milestone 5**: Admin Panel Basics (Full-Stack) ✅
 - [x] **Milestone 6**: User Authentication & Authorization (Full-Stack) ✅
+- [x] **Milestone 7**: CI/CD & Deployment ✅
 
 See [docs/project/MILESTONES.md](docs/project/MILESTONES.md) for detailed breakdown.
+
+## Deployment
+
+The application is configured for deployment to:
+
+| Component | Platform                       | Description                   |
+| --------- | ------------------------------ | ----------------------------- |
+| Backend   | [Railway](https://railway.app) | NestJS API with Docker        |
+| Database  | [Neon](https://neon.tech)      | Serverless PostgreSQL         |
+| Frontend  | [Vercel](https://vercel.com)   | Next.js with auto-deploy      |
+| Mobile    | [EAS Build](https://expo.dev)  | Preview and production builds |
+
+### CI/CD Pipeline
+
+- **CI**: Runs on every push/PR - linting, tests, and builds
+- **Backend CD**: Auto-deploys to Railway on push to main
+- **Frontend CD**: Auto-deploys to Vercel on push to main
+- **Mobile**: Manual trigger for EAS preview builds
+
+See [docs/deployment/DEPLOYMENT.md](docs/deployment/DEPLOYMENT.md) for setup instructions.
 
 ## Documentation
 
@@ -241,6 +265,10 @@ See [docs/project/MILESTONES.md](docs/project/MILESTONES.md) for detailed breakd
 - [Configuration](docs/architecture/CONFIGURATION.md) - Advanced configuration system
 - [Setup Guide](docs/architecture/SETUP.md) - Detailed setup instructions
 
+### Deployment
+
+- [Deployment Guide](docs/deployment/DEPLOYMENT.md) - CI/CD and deployment instructions
+
 ### Development Guides
 
 - [Commit Conventions](docs/guides/COMMIT_CONVENTIONS.md) - Git commit message standards
@@ -253,6 +281,7 @@ See [docs/project/MILESTONES.md](docs/project/MILESTONES.md) for detailed breakd
 - [Milestone 4 Progress](docs/milestones/MILESTONE_4_PROGRESS.md) - Checkout & Orders completion report
 - [Milestone 5 Progress](docs/milestones/MILESTONE_5_PROGRESS.md) - Admin Panel completion report
 - [Milestone 6 Progress](docs/milestones/MILESTONE_6_PROGRESS.md) - User Authentication completion report
+- [Milestone 7 CI/CD](docs/milestones/MILESTONE_7_CICD.md) - CI/CD & Deployment completion report
 
 ### Code Reviews
 
@@ -354,4 +383,4 @@ MIT
 
 ---
 
-**Current Status:** Milestone 6 Complete - Full JWT authentication with user accounts & cart merge!
+**Current Status:** Milestone 7 Complete - CI/CD pipeline with Railway, Vercel, Neon, and EAS Build!
