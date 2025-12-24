@@ -8,9 +8,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   version: '1.0.0',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
-  scheme: 'mobile',
+  scheme: 'trove',
   userInterfaceStyle: 'automatic',
   newArchEnabled: true,
+  // EAS Build requires owner for managed builds
+  owner: process.env.EXPO_OWNER || 'your-expo-username',
   splash: {
     image: './assets/images/splash-icon.png',
     resizeMode: 'contain',
@@ -18,6 +20,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   ios: {
     supportsTablet: true,
+    bundleIdentifier: 'com.trove.mobile',
   },
   android: {
     adaptiveIcon: {
@@ -25,6 +28,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: '#ffffff',
     },
     edgeToEdgeEnabled: true,
+    package: 'com.trove.mobile',
   },
   web: {
     bundler: 'metro',
@@ -37,5 +41,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   extra: {
     apiUrl: process.env.API_URL || 'http://localhost:4000',
+    eas: {
+      projectId: process.env.EAS_PROJECT_ID || 'your-eas-project-id',
+    },
   },
 });

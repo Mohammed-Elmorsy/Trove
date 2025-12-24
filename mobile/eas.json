@@ -1,0 +1,36 @@
+{
+  "cli": {
+    "version": ">= 13.0.0",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "API_URL": "http://localhost:4000"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": false
+      },
+      "env": {
+        "API_URL": "https://your-backend.railway.app"
+      }
+    },
+    "production": {
+      "distribution": "store",
+      "env": {
+        "API_URL": "https://your-backend.railway.app"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
