@@ -3,9 +3,11 @@ import * as Joi from 'joi';
 export const validationSchema = Joi.object({
   // Database
   DATABASE_URL: Joi.string()
-    .uri()
     .required()
     .description('PostgreSQL connection string'),
+  DIRECT_URL: Joi.string()
+    .optional()
+    .description('Direct PostgreSQL connection string for migrations (Neon)'),
 
   // Server
   PORT: Joi.number().port().default(4000).description('Application port'),
@@ -19,10 +21,13 @@ export const validationSchema = Joi.object({
     .description('Frontend application URL for CORS'),
 
   // Admin (Simple auth for Milestone 5, replaced by JWT in Milestone 6)
+  // Optional in production since JWT is now used for admin authentication
   ADMIN_SECRET: Joi.string()
     .min(32)
-    .required()
-    .description('Admin panel secret key (min 32 characters)'),
+    .optional()
+    .description(
+      'Admin panel secret key (min 32 characters) - optional in production',
+    ),
 
   // JWT (Milestone 6)
   JWT_SECRET: Joi.string()
