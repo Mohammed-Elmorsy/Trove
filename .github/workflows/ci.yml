@@ -67,6 +67,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          DATABASE_URL: "postgresql://test:test@localhost:5432/test"
 
   # Frontend CI
   frontend:
