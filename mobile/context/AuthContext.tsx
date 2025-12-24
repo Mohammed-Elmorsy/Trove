@@ -111,7 +111,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => {
       clearRefreshTimeout();
     };
-  }, []);
+  }, [clearRefreshTimeout, scheduleTokenRefresh]);
 
   const login = useCallback(
     async (email: string, password: string, sessionId?: string | null): Promise<AuthResponse> => {

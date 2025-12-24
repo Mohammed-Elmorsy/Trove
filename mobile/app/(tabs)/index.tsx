@@ -58,7 +58,14 @@ export default function ProductsScreen() {
     async (page: number, append: boolean = false) => {
       try {
         setError(null);
-        const query: Record<string, any> = {
+        const query: {
+          page: number;
+          limit: number;
+          categoryId?: string;
+          search?: string;
+          minPrice?: number;
+          maxPrice?: number;
+        } = {
           page,
           limit: ITEMS_PER_PAGE,
         };
@@ -118,7 +125,7 @@ export default function ProductsScreen() {
     loadProducts(1, false).then(() => {
       isFirstLoad.current = false;
     });
-  }, []);
+  }, [loadProducts]);
 
   const handleCategoryChange = (categoryId: string | null) => {
     setSelectedCategoryId(categoryId);
