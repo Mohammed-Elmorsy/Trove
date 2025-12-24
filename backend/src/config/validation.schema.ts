@@ -55,16 +55,7 @@ export const validationSchema = Joi.object({
     .default('http://localhost:3000')
     .description('Frontend application URL for CORS'),
 
-  // Admin (Simple auth for Milestone 5, replaced by JWT in Milestone 6)
-  // Optional in production since JWT is now used for admin authentication
-  ADMIN_SECRET: Joi.string()
-    .min(32)
-    .optional()
-    .description(
-      'Admin panel secret key (min 32 characters) - optional in production',
-    ),
-
-  // JWT (Milestone 6)
+  // JWT Authentication
   JWT_SECRET: Joi.string()
     .min(32)
     .required()

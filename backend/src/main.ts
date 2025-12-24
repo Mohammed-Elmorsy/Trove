@@ -28,7 +28,26 @@ async function bootstrap() {
         includeSubDomains: true,
         preload: true,
       },
+      noSniff: true, // X-Content-Type-Options: nosniff
+      frameguard: { action: 'deny' }, // X-Frame-Options: DENY
+      referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
     }),
+  );
+
+  // Additional security headers
+  app.use(
+    (
+      _req: unknown,
+      res: { setHeader: (name: string, value: string) => void },
+      next: () => void,
+    ) => {
+      res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
+      res.setHeader(
+        'Permissions-Policy',
+        'geolocation=(), microphone=(), camera=()',
+      );
+      next();
+    },
   );
 
   // Request size limits
@@ -59,7 +78,8 @@ async function bootstrap() {
     logger.log(`Backend server running on http://localhost:${appConfig.port}`);
     logger.log(`Environment: ${appConfig.nodeEnv}`);
   } else {
-    logger.log(`Server started on port ${appConfig.port}`);
+    // Minimal logging in production to avoid information disclosure
+    logger.log('Server started successfully');
   }
 }
 void bootstrap();
