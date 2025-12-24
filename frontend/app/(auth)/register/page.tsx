@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -22,7 +22,7 @@ import {
 import { useAuth } from '@/components/providers/auth-provider';
 import { registerSchema, type RegisterFormData } from '@/lib/validations/auth';
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { register: registerUser, isAuthenticated, isLoading: authLoading } = useAuth();
@@ -149,5 +149,19 @@ export default function RegisterPage() {
         </CardFooter>
       </form>
     </Card>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      }
+    >
+      <RegisterForm />
+    </Suspense>
   );
 }

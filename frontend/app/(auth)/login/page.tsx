@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -23,7 +23,7 @@ import { useAuth } from '@/components/providers/auth-provider';
 import { useCart } from '@/components/providers/cart-provider';
 import { loginSchema, type LoginFormData } from '@/lib/validations/auth';
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { login, isAuthenticated, isLoading: authLoading } = useAuth();
@@ -135,5 +135,19 @@ export default function LoginPage() {
         </CardFooter>
       </form>
     </Card>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        </div>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }
