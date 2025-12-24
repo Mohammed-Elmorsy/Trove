@@ -1,11 +1,12 @@
 import { MetadataRoute } from 'next';
 import { getProducts } from '@/lib/api';
+import { Product } from '@/types/product';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
   // Fetch all products for dynamic sitemap generation
-  let allProducts: any[] = [];
+  let allProducts: Product[] = [];
   try {
     const productsData = await getProducts({ page: 1, limit: 1000 });
     allProducts = productsData.data;
