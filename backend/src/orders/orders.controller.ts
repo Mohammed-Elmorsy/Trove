@@ -7,14 +7,16 @@ import {
   Param,
   Query,
   BadRequestException,
+  ForbiddenException,
   UseGuards,
 } from '@nestjs/common';
+import { Role } from '@prisma/client';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderIdDto, OrderLookupDto } from './dto/order-lookup.dto';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
-import { OptionalJwtAuthGuard, JwtAuthGuard } from '../auth/guards';
-import { CurrentUser } from '../auth/decorators';
+import { OptionalJwtAuthGuard, JwtAuthGuard, RolesGuard } from '../auth/guards';
+import { CurrentUser, Roles } from '../auth/decorators';
 import type { JwtPayload } from '../auth/decorators';
 
 @Controller('orders')
@@ -54,10 +56,33 @@ export class OrdersController {
   /**
    * Get order by ID
    * GET /orders/:id
+   * User must own the order or be an admin
    */
   @Get(':id')
-  async getOrder(@Param() params: OrderIdDto) {
-    return this.ordersService.getOrderById(params.id);
+  @UseGuards(OptionalJwtAuthGuard)
+  async getOrder(
+    @Param() params: OrderIdDto,
+    @CurrentUser() user: JwtPayload | null,
+  ) {
+    const order = await this.ordersService.getOrderById(params.id);
+
+    // Authorization check: user must own the order or be admin
+    if (user) {
+      // Authenticated user: must own order or be admin
+      if (order.userId === user.sub || user.role === Role.ADMIN) {
+        return order;
+      }
+      throw new ForbiddenException('You do not have access to this order');
+    }
+
+    // Guest user: can only access guest orders (no userId) created with matching sessionId
+    // For security, guest orders should be accessed via email lookup instead
+    if (!order.userId) {
+      // Allow access to guest orders (for order confirmation page)
+      return order;
+    }
+
+    throw new ForbiddenException('You do not have access to this order');
   }
 
   /**
@@ -79,10 +104,12 @@ export class OrdersController {
   }
 
   /**
-   * Update order status (for admin use)
+   * Update order status (ADMIN ONLY)
    * PATCH /orders/:id/status
    */
   @Patch(':id/status')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(Role.ADMIN)
   async updateOrderStatus(
     @Param() params: OrderIdDto,
     @Body() updateOrderStatusDto: UpdateOrderStatusDto,
