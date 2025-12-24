@@ -14,7 +14,7 @@ export class QueryProductDto {
   @IsOptional()
   @IsString()
   @MaxLength(100)
-  @Transform(({ value }) => value?.trim())
+  @Transform(({ value }: { value: string }) => value?.trim())
   search?: string;
 
   @IsOptional()

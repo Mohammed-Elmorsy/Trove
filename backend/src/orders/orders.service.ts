@@ -3,9 +3,14 @@ import {
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { OrderStatus } from './dto/update-order-status.dto';
+
+type OrderWithItems = Prisma.OrderGetPayload<{
+  include: { items: { include: { product: true } } };
+}>;
 
 const FREE_SHIPPING_THRESHOLD = 50;
 const SHIPPING_COST = 5.99;
@@ -277,7 +282,7 @@ export class OrdersService {
   /**
    * Format order for API response
    */
-  private formatOrderResponse(order: any) {
+  private formatOrderResponse(order: OrderWithItems) {
     return {
       id: order.id,
       orderNumber: order.orderNumber,
@@ -294,7 +299,7 @@ export class OrdersService {
         zipCode: order.shippingZipCode,
         country: order.shippingCountry,
       },
-      items: order.items.map((item: any) => ({
+      items: order.items.map((item) => ({
         id: item.id,
         productId: item.productId,
         productName: item.productName,

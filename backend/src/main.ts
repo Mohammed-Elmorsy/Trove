@@ -62,4 +62,4 @@ async function bootstrap() {
     logger.log(`Server started on port ${appConfig.port}`);
   }
 }
-bootstrap();
+void bootstrap();

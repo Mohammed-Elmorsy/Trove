@@ -1,7 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { QueryOrdersDto } from './dto/query-orders.dto';
 import type { OrderStatus } from '../orders/dto/update-order-status.dto';
+
+type OrderWithItems = Prisma.OrderGetPayload<{
+  include: { items: { include: { product: true } } };
+}>;
 
 export interface DashboardStats {
   totalProducts: number;
@@ -183,7 +188,7 @@ export class AdminService {
   /**
    * Format order for API response
    */
-  private formatOrderResponse(order: any) {
+  private formatOrderResponse(order: OrderWithItems) {
     return {
       id: order.id,
       orderNumber: order.orderNumber,
@@ -199,7 +204,7 @@ export class AdminService {
         zipCode: order.shippingZipCode,
         country: order.shippingCountry,
       },
-      items: order.items.map((item: any) => ({
+      items: order.items.map((item) => ({
         id: item.id,
         productId: item.productId,
         productName: item.productName,
