@@ -9,16 +9,19 @@ import {
   MaxLength,
   IsUrl,
 } from 'class-validator';
+import { SanitizeHtml } from '../../common/decorators';
 
 export class CreateProductDto {
   @IsString()
   @IsNotEmpty()
   @MaxLength(200)
+  @SanitizeHtml()
   name: string;
 
   @IsString()
   @IsOptional()
   @MaxLength(5000)
+  @SanitizeHtml()
   description?: string;
 
   @IsNumber({ maxDecimalPlaces: 2 })

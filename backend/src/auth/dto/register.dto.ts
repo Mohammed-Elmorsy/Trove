@@ -5,6 +5,7 @@ import {
   MaxLength,
   Matches,
 } from 'class-validator';
+import { SanitizeHtml } from '../../common/decorators';
 
 export class RegisterDto {
   @IsEmail({}, { message: 'Please provide a valid email address' })
@@ -22,5 +23,6 @@ export class RegisterDto {
   @IsString()
   @MinLength(2, { message: 'Name must be at least 2 characters long' })
   @MaxLength(100, { message: 'Name must be less than 100 characters' })
+  @SanitizeHtml()
   name: string;
 }

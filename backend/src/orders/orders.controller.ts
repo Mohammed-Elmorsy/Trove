@@ -10,6 +10,7 @@ import {
   ForbiddenException,
   UseGuards,
 } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { Role } from '@prisma/client';
 import { OrdersService } from './orders.service';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -88,8 +89,10 @@ export class OrdersController {
   /**
    * Lookup orders by email
    * GET /orders?email=xxx
+   * Rate limited to prevent email enumeration attacks
    */
   @Get()
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   async lookupOrders(@Query() query: OrderLookupDto) {
     if (!query.email && !query.sessionId) {
       throw new BadRequestException('Email or sessionId is required');

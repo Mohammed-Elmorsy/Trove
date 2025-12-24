@@ -74,123 +74,129 @@ export class CartService {
   async addItem(addToCartDto: AddToCartDto, userId?: string) {
     const { sessionId, productId, quantity } = addToCartDto;
 
-    // Validate product exists and has sufficient stock
-    const product = await this.prisma.product.findUnique({
-      where: { id: productId },
-    });
-
-    if (!product) {
-      throw new NotFoundException(`Product with ID ${productId} not found`);
-    }
-
-    // Find or create cart - prefer userId if authenticated
-    let cart = userId
-      ? await this.prisma.cart.findUnique({ where: { userId } })
-      : await this.prisma.cart.findUnique({ where: { sessionId } });
-
-    if (!cart) {
-      cart = await this.prisma.cart.create({
-        data: userId ? { userId } : { sessionId },
+    // Use transaction to prevent race conditions in stock validation
+    return await this.prisma.$transaction(async (tx) => {
+      // Validate product exists and has sufficient stock
+      const product = await tx.product.findUnique({
+        where: { id: productId },
       });
-    }
 
-    // Check if item already exists in cart
-    const existingItem = await this.prisma.cartItem.findUnique({
-      where: {
-        cartId_productId: {
-          cartId: cart.id,
-          productId,
-        },
-      },
-    });
+      if (!product) {
+        throw new NotFoundException(`Product with ID ${productId} not found`);
+      }
 
-    const newQuantity = existingItem
-      ? existingItem.quantity + quantity
-      : quantity;
+      // Find or create cart - prefer userId if authenticated
+      let cart = userId
+        ? await tx.cart.findUnique({ where: { userId } })
+        : await tx.cart.findUnique({ where: { sessionId } });
 
-    // Validate stock
-    if (newQuantity > product.stock) {
-      throw new BadRequestException(
-        `Not enough stock. Available: ${product.stock}, Requested: ${newQuantity}`,
-      );
-    }
+      if (!cart) {
+        cart = await tx.cart.create({
+          data: userId ? { userId } : { sessionId },
+        });
+      }
 
-    // Upsert cart item
-    const cartItem = await this.prisma.cartItem.upsert({
-      where: {
-        cartId_productId: {
-          cartId: cart.id,
-          productId,
-        },
-      },
-      update: {
-        quantity: newQuantity,
-      },
-      create: {
-        cartId: cart.id,
-        productId,
-        quantity,
-      },
-      include: {
-        product: {
-          include: {
-            category: true,
+      // Check if item already exists in cart
+      const existingItem = await tx.cartItem.findUnique({
+        where: {
+          cartId_productId: {
+            cartId: cart.id,
+            productId,
           },
         },
-      },
-    });
+      });
 
-    return {
-      id: cartItem.id,
-      productId: cartItem.productId,
-      quantity: cartItem.quantity,
-      product: {
-        ...cartItem.product,
-        price: Number(cartItem.product.price),
-      },
-    };
+      const newQuantity = existingItem
+        ? existingItem.quantity + quantity
+        : quantity;
+
+      // Validate stock within transaction
+      if (newQuantity > product.stock) {
+        throw new BadRequestException(
+          `Not enough stock. Available: ${product.stock}, Requested: ${newQuantity}`,
+        );
+      }
+
+      // Upsert cart item
+      const cartItem = await tx.cartItem.upsert({
+        where: {
+          cartId_productId: {
+            cartId: cart.id,
+            productId,
+          },
+        },
+        update: {
+          quantity: newQuantity,
+        },
+        create: {
+          cartId: cart.id,
+          productId,
+          quantity,
+        },
+        include: {
+          product: {
+            include: {
+              category: true,
+            },
+          },
+        },
+      });
+
+      return {
+        id: cartItem.id,
+        productId: cartItem.productId,
+        quantity: cartItem.quantity,
+        product: {
+          ...cartItem.product,
+          price: Number(cartItem.product.price),
+        },
+      };
+    });
   }
 
   async updateQuantity(itemId: string, updateCartItemDto: UpdateCartItemDto) {
     const { quantity } = updateCartItemDto;
 
-    const cartItem = await this.prisma.cartItem.findUnique({
-      where: { id: itemId },
-      include: { product: true },
-    });
+    // Use transaction to prevent race conditions in stock validation
+    return await this.prisma.$transaction(async (tx) => {
+      const cartItem = await tx.cartItem.findUnique({
+        where: { id: itemId },
+        include: { product: true },
+      });
 
-    if (!cartItem) {
-      throw new NotFoundException(`Cart item with ID ${itemId} not found`);
-    }
+      if (!cartItem) {
+        throw new NotFoundException(`Cart item with ID ${itemId} not found`);
+      }
 
-    // Validate stock
-    if (quantity > cartItem.product.stock) {
-      throw new BadRequestException(
-        `Not enough stock. Available: ${cartItem.product.stock}`,
-      );
-    }
+      // Validate stock within transaction
+      if (quantity > cartItem.product.stock) {
+        throw new BadRequestException(
+          `Not enough stock. Available: ${cartItem.product.stock}`,
+        );
+      }
 
-    const updatedItem = await this.prisma.cartItem.update({
-      where: { id: itemId },
-      data: { quantity },
-      include: {
-        product: {
-          include: {
-            category: true,
+      const updatedItem = await tx.cartItem.update({
+        where: { id: itemId },
+        data: { quantity },
+        include: {
+          product: {
+            include: {
+              category: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    return {
-      id: updatedItem.id,
-      productId: updatedItem.productId,
-      quantity: updatedItem.quantity,
-      product: {
-        ...updatedItem.product,
-        price: Number(updatedItem.product.price),
-      },
-    };
+      return {
+        id: updatedItem.id,
+        productId: updatedItem.productId,
+        quantity: updatedItem.quantity,
+        product: {
+          ...updatedItem.product,
+          price: Number(updatedItem.product.price),
+        },
+      };
+    });
   }
 
   async removeItem(itemId: string) {
