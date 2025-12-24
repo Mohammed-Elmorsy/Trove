@@ -41,13 +41,6 @@ export default [
     },
   },
   {
-    ignores: [
-      '.expo/*',
-      'node_modules/*',
-      'dist/*',
-      'android/*',
-      'ios/*',
-      '**/__tests__/*',
-    ],
+    ignores: ['.expo/*', 'node_modules/*', 'dist/*', 'android/*', 'ios/*', '**/__tests__/*'],
   },
 ];
